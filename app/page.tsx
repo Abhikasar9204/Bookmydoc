@@ -1213,7 +1213,7 @@ export default function BookMyDocApp() {
                       onClick={() => setReceptionistTab(item.id as any)}
                       className={cn("flex items-center gap-3 px-4 py-3 rounded-2xl text-[13px] font-bold transition-all duration-200 border border-transparent focus:outline-none", {
                         "bg-[#0F8B8D]/10 text-[#0F8B8D] dark:bg-[#0F8B8D]/20": isActive,
-                        "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850": !isActive
+                        "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800": !isActive
                       })}
                     >
                       <Icon className="w-5 h-5" />
@@ -1225,7 +1225,7 @@ export default function BookMyDocApp() {
             </div>
 
             {/* Sidebar Footer */}
-            <div className="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-850 pt-4">
+            <div className="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-4">
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-[#0F8B8D]/10 dark:bg-[#0F8B8D]/20 text-[#0F8B8D] flex items-center justify-center font-bold text-xs uppercase">
                   SC
@@ -1238,13 +1238,13 @@ export default function BookMyDocApp() {
               <div className="flex gap-1.5 p-1 bg-slate-50 dark:bg-slate-900/60 border border-slate-150 dark:border-slate-800 rounded-2xl">
                 <button
                   onClick={() => { setView('app'); setPatientTab('home'); }}
-                  className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-850 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
+                  className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
                 >
                   Patient App
                 </button>
                 <button
                   onClick={() => setView('doctor')}
-                  className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-850 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
+                  className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
                 >
                   Doctor Desk
                 </button>
@@ -1257,14 +1257,14 @@ export default function BookMyDocApp() {
             {/* Header */}
             <header className="h-18 bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 px-8 flex justify-between items-center z-10">
               <div>
-                <span className="text-[10px] font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Friday, July 17, 2026</span>
-                <h2 className="text-[17px] font-heading font-black text-slate-850 dark:text-slate-100 mt-0.5">Dermavita Operational Console</h2>
+                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Friday, July 17, 2026</span>
+                <h2 className="text-[17px] font-heading font-black text-slate-800 dark:text-slate-100 mt-0.5">Dermavita Operational Console</h2>
               </div>
 
               {/* Header Right */}
               <div className="flex items-center gap-4">
                 {/* Auto simulation badge */}
-                <div className="flex items-center gap-2 border border-slate-200/60 dark:border-slate-800 bg-slate-50 dark:bg-slate-955 px-3.5 py-1.5 rounded-2xl shadow-xs">
+                <div className="flex items-center gap-2 border border-slate-200/60 dark:border-slate-800 bg-slate-50 dark:bg-slate-950 px-3.5 py-1.5 rounded-2xl shadow-xs">
                   <span className="relative flex h-2 w-2">
                     {receptionistAutoSimulate && (
                       <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
@@ -1288,7 +1288,7 @@ export default function BookMyDocApp() {
                 {/* Notifications bell */}
                 <button 
                   onClick={() => setShowNotificationOverlay(true)}
-                  className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-850 dark:hover:bg-slate-800 flex items-center justify-center relative hover:scale-105 active:scale-95 transition-all shadow-xs border border-slate-100 dark:border-slate-800 focus:outline-none"
+                  className="w-10 h-10 rounded-xl bg-slate-50 hover:bg-slate-100 dark:bg-slate-800 dark:hover:bg-slate-800 flex items-center justify-center relative hover:scale-105 active:scale-95 transition-all shadow-xs border border-slate-100 dark:border-slate-800 focus:outline-none"
                 >
                   <Bell className="w-5 h-5 text-slate-500 dark:text-slate-400" />
                   {notifications.some(n => !n.read) && (
@@ -1351,7 +1351,7 @@ export default function BookMyDocApp() {
                           <div>
                             <span className="text-[10px] text-slate-400 block uppercase font-bold tracking-wider">{card.title}</span>
                             <span className="text-2xl font-black text-slate-800 dark:text-slate-100 font-heading block mt-0.5 leading-none">{card.value}</span>
-                            <span className="text-[9.5px] text-slate-450 block font-semibold mt-1.5">{card.trend} • <span className="text-slate-400">{card.desc}</span></span>
+                            <span className="text-[9.5px] text-slate-400 block font-semibold mt-1.5">{card.trend} • <span className="text-slate-400">{card.desc}</span></span>
                           </div>
                         </Card>
                       );
@@ -1371,19 +1371,19 @@ export default function BookMyDocApp() {
                       <Card variant="elevated" className="p-6 border border-slate-150/80 bg-white dark:bg-slate-900 shadow-sm flex flex-col gap-6">
                         <div className="grid grid-cols-3 gap-4 text-center border-b pb-5 border-slate-100 dark:border-slate-800">
                           <div>
-                            <span className="text-[9px] text-slate-450 uppercase font-bold tracking-wider block">Serving Now</span>
+                            <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Serving Now</span>
                             <span className="text-2xl font-black text-primary font-heading mt-1.5 block">
                               {getDoctorQueueDetails('doc-1').currentToken}
                             </span>
                           </div>
                           <div>
-                            <span className="text-[9px] text-slate-455 uppercase font-bold tracking-wider block">Patients Waiting</span>
+                            <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Patients Waiting</span>
                             <span className="text-2xl font-black text-slate-700 dark:text-slate-200 font-heading mt-1.5 block">
                               {getDoctorQueueDetails('doc-1').timeline.filter(t => t.status === 'waiting').length}
                             </span>
                           </div>
                           <div>
-                            <span className="text-[9px] text-slate-455 uppercase font-bold tracking-wider block">Estimated Wait</span>
+                            <span className="text-[9px] text-slate-500 uppercase font-bold tracking-wider block">Estimated Wait</span>
                             <span className="text-2xl font-black text-slate-700 dark:text-slate-200 font-heading mt-1.5 block">
                               {getDoctorQueueDetails('doc-1').timeline.filter(t => t.status === 'waiting').length * 10} mins
                             </span>
@@ -1392,7 +1392,7 @@ export default function BookMyDocApp() {
 
                         {/* Interactive lineup scroll */}
                         <div className="flex flex-col gap-3">
-                          <span className="text-[10px] text-slate-455 font-bold uppercase tracking-wider block">Queue Timeline Lineup</span>
+                          <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider block">Queue Timeline Lineup</span>
                           <div className="flex items-center gap-3.5 overflow-x-auto py-2 scrollbar-none">
                             {(() => {
                               const details = getDoctorQueueDetails('doc-1');
@@ -1414,11 +1414,11 @@ export default function BookMyDocApp() {
                                       </div>
                                     </div>
                                   ) : (
-                                    <span className="text-xs text-slate-455 font-semibold bg-slate-50 dark:bg-slate-800/40 px-4 py-2.5 rounded-xl">No active patient currently</span>
+                                    <span className="text-xs text-slate-500 font-semibold bg-slate-50 dark:bg-slate-800/40 px-4 py-2.5 rounded-xl">No active patient currently</span>
                                   )}
 
                                   {details.timeline.filter(t => t.status === 'waiting').length > 0 && (
-                                    <ChevronRight className="w-5 h-5 text-slate-350 flex-shrink-0" />
+                                    <ChevronRight className="w-5 h-5 text-slate-400 flex-shrink-0" />
                                   )}
 
                                   {details.timeline.filter(t => t.status === 'waiting').map((item, idx) => (
@@ -1428,9 +1428,9 @@ export default function BookMyDocApp() {
                                         const p = MOCK_PATIENTS.find(pt => pt.id === item.patientId) || MOCK_PATIENTS[0];
                                         setSelectedPatientForDrawer(p);
                                       }}
-                                      className="flex-shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-655 p-3.5 rounded-2xl flex items-center gap-3.5 cursor-pointer transition-all shadow-xs"
+                                      className="flex-shrink-0 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-600 p-3.5 rounded-2xl flex items-center gap-3.5 cursor-pointer transition-all shadow-xs"
                                     >
-                                      <div className="w-9.5 h-9.5 rounded-xl bg-slate-100 dark:bg-slate-850 flex items-center justify-center text-slate-600 dark:text-slate-350 font-bold text-sm uppercase">
+                                      <div className="w-9.5 h-9.5 rounded-xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-600 dark:text-slate-400 font-bold text-sm uppercase">
                                         {item.patientName[0]}
                                       </div>
                                       <div className="text-left">
@@ -1448,7 +1448,7 @@ export default function BookMyDocApp() {
 
                       {/* Log Console */}
                       <div className="flex justify-between items-center mt-2">
-                        <h3 className="text-xs font-bold text-slate-455 dark:text-slate-500 uppercase tracking-widest">Real-time Desk Log Feed</h3>
+                        <h3 className="text-xs font-bold text-slate-500 dark:text-slate-500 uppercase tracking-widest">Real-time Desk Log Feed</h3>
                         <button onClick={() => setReceptionistActivityLog(["Initialised desk at 09:00 AM", "Verified live queue connectivity"])} className="text-[10px] text-[#0F8B8D] font-bold hover:underline focus:outline-none">Clear logs</button>
                       </div>
                       <Card className="p-5 bg-slate-900 border-none rounded-2xl font-mono text-[11.5px] text-emerald-400 max-h-56 overflow-y-auto flex flex-col gap-2 shadow-inner">
@@ -1466,7 +1466,7 @@ export default function BookMyDocApp() {
                       
                       {/* Desk Quick Actions */}
                       <div>
-                        <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest mb-4">Quick Desk Actions</h3>
+                        <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Quick Desk Actions</h3>
                         <Card variant="elevated" className="p-5 border border-slate-150/70 bg-white dark:bg-slate-905 shadow-sm flex flex-col gap-3">
                           <Button onClick={() => setReceptionistBookingOpen(true)} className="w-full justify-start rounded-2xl h-12 text-xs font-bold font-sans">
                             <Plus className="w-5 h-5 mr-2" /> Book New Appointment
@@ -1499,12 +1499,12 @@ export default function BookMyDocApp() {
                           </div>
 
                           <div className="border-t border-slate-100 dark:border-slate-800 pt-3.5 flex flex-col gap-2.5">
-                            <button onClick={() => alert("Printing active queue ticket...")} className="flex justify-between items-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11.5px] font-bold text-slate-655 dark:text-slate-350 transition-colors">
-                              <span className="flex items-center gap-2"><Printer className="w-4.5 h-4.5 text-slate-450" /> Print Token Receipt</span>
+                            <button onClick={() => alert("Printing active queue ticket...")} className="flex justify-between items-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11.5px] font-bold text-slate-600 dark:text-slate-400 transition-colors">
+                              <span className="flex items-center gap-2"><Printer className="w-4.5 h-4.5 text-slate-400" /> Print Token Receipt</span>
                               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                             </button>
-                            <button onClick={() => alert("Activating QR Ticket scanner...")} className="flex justify-between items-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11.5px] font-bold text-slate-655 dark:text-slate-350 transition-colors">
-                              <span className="flex items-center gap-2"><QrCode className="w-4.5 h-4.5 text-slate-450" /> Scan QR Check-in</span>
+                            <button onClick={() => alert("Activating QR Ticket scanner...")} className="flex justify-between items-center p-2 rounded-xl hover:bg-slate-50 dark:hover:bg-slate-800/40 text-[11.5px] font-bold text-slate-600 dark:text-slate-400 transition-colors">
+                              <span className="flex items-center gap-2"><QrCode className="w-4.5 h-4.5 text-slate-400" /> Scan QR Check-in</span>
                               <ChevronRight className="w-3.5 h-3.5 text-slate-400" />
                             </button>
                           </div>
@@ -1513,7 +1513,7 @@ export default function BookMyDocApp() {
 
                       {/* Doctor live status list */}
                       <div>
-                        <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest mb-4">Doctor Desk Status</h3>
+                        <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Doctor Desk Status</h3>
                         <Card variant="elevated" className="p-4 border border-slate-150/70 bg-white dark:bg-slate-905 shadow-sm flex flex-col gap-3">
                           {doctors.slice(0, 4).map((doc) => {
                             const q = getDoctorQueueDetails(doc.id);
@@ -1521,7 +1521,7 @@ export default function BookMyDocApp() {
                               <div key={doc.id} className="flex items-center justify-between border-b last:border-0 pb-3 last:pb-0 border-slate-100 dark:border-slate-800 text-xs">
                                 <div>
                                   <h4 className="font-extrabold text-slate-800 dark:text-slate-100">{doc.name}</h4>
-                                  <span className="text-[10px] text-slate-455 font-semibold block mt-0.5">Room: {doc.id === 'doc-1' ? 'Room 01' : doc.id === 'doc-2' ? 'Room 02' : doc.id === 'doc-3' ? 'Room 03' : 'Room 04'}</span>
+                                  <span className="text-[10px] text-slate-500 font-semibold block mt-0.5">Room: {doc.id === 'doc-1' ? 'Room 01' : doc.id === 'doc-2' ? 'Room 02' : doc.id === 'doc-3' ? 'Room 03' : 'Room 04'}</span>
                                 </div>
                                 <div className="text-right">
                                   <Badge 
@@ -1550,7 +1550,7 @@ export default function BookMyDocApp() {
                   
                   {/* Tab Selector & Search bar */}
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
-                    <div className="flex gap-1.5 p-1 bg-white dark:bg-slate-900 border border-slate-155 dark:border-slate-800 rounded-2xl">
+                    <div className="flex gap-1.5 p-1 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl">
                       {[
                         { id: 'today', label: "Today's Queue" },
                         { id: 'upcoming', label: "Upcoming" },
@@ -1603,11 +1603,11 @@ export default function BookMyDocApp() {
                         }
                       })
                       .map((appt) => (
-                        <Card key={appt.id} variant="elevated" className="p-4 bg-white dark:bg-slate-900 border border-slate-155 dark:border-slate-800 flex justify-between items-center text-xs shadow-xs">
+                        <Card key={appt.id} variant="elevated" className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 flex justify-between items-center text-xs shadow-xs">
                           <div>
                             <div className="flex items-center gap-2">
-                              <strong className="text-slate-850 dark:text-slate-100 font-extrabold text-[13.5px]">{appt.patientName}</strong>
-                              <span className="text-[10px] bg-slate-50 dark:bg-slate-800 text-slate-655 dark:text-slate-350 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40 dark:border-slate-700">{appt.token}</span>
+                              <strong className="text-slate-800 dark:text-slate-100 font-extrabold text-[13.5px]">{appt.patientName}</strong>
+                              <span className="text-[10px] bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-400 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40 dark:border-slate-700">{appt.token}</span>
                             </div>
                             <span className="text-[#0F8B8D] font-bold block mt-1">{appt.doctorName}</span>
                             <span className="text-[10.5px] text-slate-400 font-medium block mt-1">{appt.date} • {appt.time}</span>
@@ -1640,7 +1640,7 @@ export default function BookMyDocApp() {
                               <Button
                                 size="sm"
                                 variant="outline"
-                                className="h-8.5 rounded-xl text-[10.5px] px-3 border-slate-200 dark:border-slate-800 hover:border-slate-350 dark:hover:border-slate-700"
+                                className="h-8.5 rounded-xl text-[10.5px] px-3 border-slate-200 dark:border-slate-800 hover:border-slate-400 dark:hover:border-slate-700"
                                 onClick={() => triggerReschedule(appt)}
                               >
                                 Reschedule
@@ -1671,7 +1671,7 @@ export default function BookMyDocApp() {
                   
                   {/* Selector for doctor queue */}
                   <div className="flex justify-between items-center">
-                    <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Select Doctor Queue</h3>
+                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Select Doctor Queue</h3>
                     <select
                       value={selectedQueueDoctorId}
                       onChange={(e) => setSelectedQueueDoctorId(e.target.value)}
@@ -1725,7 +1725,7 @@ export default function BookMyDocApp() {
                                   </Button>
                                 </div>
                               ) : (
-                                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl text-center text-xs text-slate-455 font-semibold border border-dashed border-slate-200 dark:border-slate-800">
+                                <div className="bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl text-center text-xs text-slate-500 font-semibold border border-dashed border-slate-200 dark:border-slate-800">
                                   No patient is currently being served in this room.
                                 </div>
                               )}
@@ -1737,13 +1737,13 @@ export default function BookMyDocApp() {
                               {q.timeline.filter(t => t.status === 'waiting').length > 0 ? (
                                 <div className="flex flex-col gap-2.5">
                                   {q.timeline.filter(t => t.status === 'waiting').map((item, idx) => (
-                                    <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 p-3.5 rounded-2xl flex justify-between items-center hover:border-slate-350 dark:hover:border-slate-700 transition-all">
+                                    <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 p-3.5 rounded-2xl flex justify-between items-center hover:border-slate-400 dark:hover:border-slate-700 transition-all">
                                       <div className="flex items-center gap-3">
-                                        <div className="w-8.5 h-8.5 rounded-xl bg-slate-50 dark:bg-slate-955 border border-slate-100 dark:border-slate-800 flex items-center justify-center font-bold text-xs text-slate-655 dark:text-slate-355 uppercase">
+                                        <div className="w-8.5 h-8.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center font-bold text-xs text-slate-600 dark:text-slate-355 uppercase">
                                           {item.patientName[0]}
                                         </div>
                                         <div>
-                                          <h5 className="font-bold text-xs text-slate-850 dark:text-slate-100">{item.patientName}</h5>
+                                          <h5 className="font-bold text-xs text-slate-800 dark:text-slate-100">{item.patientName}</h5>
                                           <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">Token: {item.token} • Wait ~{idx * 10} mins</span>
                                         </div>
                                       </div>
@@ -1753,7 +1753,7 @@ export default function BookMyDocApp() {
                                   ))}
                                 </div>
                               ) : (
-                                <div className="text-center py-4 text-xs text-slate-455 font-semibold">
+                                <div className="text-center py-4 text-xs text-slate-500 font-semibold">
                                   No patients in waiting line.
                                 </div>
                               )}
@@ -1765,21 +1765,21 @@ export default function BookMyDocApp() {
                         <div className="flex flex-col gap-4">
                           <Card variant="elevated" className="p-5 border border-slate-150/70 bg-white dark:bg-slate-900 shadow-sm flex flex-col gap-4">
                             <h4 className="font-heading font-extrabold text-sm">Consultation Room Details</h4>
-                            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-955 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
+                            <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
                               <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-white font-bold">
                                 {doc.name[4]}
                               </div>
                               <div>
                                 <h5 className="font-bold text-xs">{doc.name}</h5>
-                                <span className="text-[10px] text-slate-455 block font-semibold mt-0.5">{doc.specialty}</span>
+                                <span className="text-[10px] text-slate-500 block font-semibold mt-0.5">{doc.specialty}</span>
                               </div>
                             </div>
                             <div className="flex flex-col gap-2 text-xs">
-                              <div className="flex justify-between border-b pb-2.5 border-slate-100 dark:border-slate-800 text-slate-455 font-semibold">
+                              <div className="flex justify-between border-b pb-2.5 border-slate-100 dark:border-slate-800 text-slate-500 font-semibold">
                                 <span>Clinic timings:</span>
                                 <span className="font-bold text-slate-750 dark:text-slate-255 text-right">{doc.clinicTimings}</span>
                               </div>
-                              <div className="flex justify-between pt-1 text-slate-455 font-semibold">
+                              <div className="flex justify-between pt-1 text-slate-500 font-semibold">
                                 <span>Estimated delay:</span>
                                 <span className="font-bold text-[#0F8B8D]">{q.timeline.filter(t => t.status === 'waiting').length * 10} mins</span>
                               </div>
@@ -1809,7 +1809,7 @@ export default function BookMyDocApp() {
                   {/* Search and database summary */}
                   <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                     <div>
-                      <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Clinic Patient Directory</h3>
+                      <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Clinic Patient Directory</h3>
                       <span className="text-[11px] text-slate-400 font-semibold block mt-0.5">Showing registered users</span>
                     </div>
 
@@ -1834,13 +1834,13 @@ export default function BookMyDocApp() {
                         <Card 
                           key={p.id} 
                           onClick={() => setSelectedPatientForDrawer(p)}
-                          className="p-5 border border-slate-150/70 bg-white dark:bg-slate-900 rounded-2xl flex items-center gap-4 hover:border-slate-350 dark:hover:border-slate-655 cursor-pointer shadow-xs transition-all animate-fade-in"
+                          className="p-5 border border-slate-150/70 bg-white dark:bg-slate-900 rounded-2xl flex items-center gap-4 hover:border-slate-400 dark:hover:border-slate-600 cursor-pointer shadow-xs transition-all animate-fade-in"
                         >
                           <div className="w-11 h-11 rounded-xl bg-[#0F8B8D]/10 text-[#0F8B8D] flex items-center justify-center font-bold text-sm uppercase">
                             {p.name[0]}
                           </div>
                           <div>
-                            <h4 className="font-extrabold text-xs text-slate-850 dark:text-slate-100 leading-none">{p.name}</h4>
+                            <h4 className="font-extrabold text-xs text-slate-800 dark:text-slate-100 leading-none">{p.name}</h4>
                             <span className="text-[10px] text-slate-400 font-semibold block mt-1.5">{p.phone}</span>
                             <div className="flex gap-2 mt-2">
                               <Badge variant="neutral" size="xs">Blood: {p.bloodGroup}</Badge>
@@ -1858,7 +1858,7 @@ export default function BookMyDocApp() {
                 <div className="flex flex-col gap-6">
                   
                   <div>
-                    <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Medical Team Roster</h3>
+                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Medical Team Roster</h3>
                     <span className="text-[11px] text-slate-400 font-semibold block mt-0.5">Live duty status</span>
                   </div>
 
@@ -1866,29 +1866,29 @@ export default function BookMyDocApp() {
                     {doctors.slice(0, 5).map((doc) => {
                       const q = getDoctorQueueDetails(doc.id);
                       return (
-                        <Card key={doc.id} variant="elevated" className="p-5 bg-white dark:bg-slate-900 border border-slate-150/70 dark:border-slate-850 shadow-xs flex flex-col gap-4 text-xs">
+                        <Card key={doc.id} variant="elevated" className="p-5 bg-white dark:bg-slate-900 border border-slate-150/70 dark:border-slate-800 shadow-xs flex flex-col gap-4 text-xs">
                           <div className="flex items-center gap-3">
                             <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-white font-bold text-sm">
                               {doc.name[4]}
                             </div>
                             <div>
-                              <h4 className="font-extrabold text-slate-855 dark:text-slate-150 text-sm leading-none">{doc.name}</h4>
-                              <span className="text-[10px] text-slate-450 font-semibold block mt-1.5">{doc.specialty} • exp {doc.experience}y</span>
+                              <h4 className="font-extrabold text-slate-800 dark:text-slate-150 text-sm leading-none">{doc.name}</h4>
+                              <span className="text-[10px] text-slate-400 font-semibold block mt-1.5">{doc.specialty} • exp {doc.experience}y</span>
                             </div>
                           </div>
 
                           <div className="border-t border-b py-3 border-slate-100 dark:border-slate-800 flex flex-col gap-2">
-                            <div className="flex justify-between font-semibold text-slate-455">
+                            <div className="flex justify-between font-semibold text-slate-500">
                               <span>Consult Room:</span>
-                              <strong className="text-slate-750 dark:text-slate-202">Room {doc.id === 'doc-1' ? 'Room 01' : doc.id === 'doc-2' ? 'Room 02' : doc.id === 'doc-3' ? 'Room 03' : 'Room 04'}</strong>
+                              <strong className="text-slate-750 dark:text-slate-200">Room {doc.id === 'doc-1' ? 'Room 01' : doc.id === 'doc-2' ? 'Room 02' : doc.id === 'doc-3' ? 'Room 03' : 'Room 04'}</strong>
                             </div>
-                            <div className="flex justify-between font-semibold text-slate-455">
+                            <div className="flex justify-between font-semibold text-slate-500">
                               <span>Active Token:</span>
                               <strong className="text-primary">{q.currentToken}</strong>
                             </div>
-                            <div className="flex justify-between font-semibold text-slate-455">
+                            <div className="flex justify-between font-semibold text-slate-500">
                               <span>Wait List Length:</span>
-                              <strong className="text-slate-750 dark:text-slate-202">{q.timeline.filter(t => t.status === 'waiting').length} patients</strong>
+                              <strong className="text-slate-750 dark:text-slate-200">{q.timeline.filter(t => t.status === 'waiting').length} patients</strong>
                             </div>
                           </div>
 
@@ -1914,7 +1914,7 @@ export default function BookMyDocApp() {
                 <div className="flex flex-col gap-6">
                   
                   <div>
-                    <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Clinic Operations Audit</h3>
+                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Clinic Operations Audit</h3>
                     <span className="text-[11px] text-slate-400 font-semibold block mt-0.5">Summary of throughput performance metrics</span>
                   </div>
 
@@ -1951,17 +1951,17 @@ export default function BookMyDocApp() {
                     <Card variant="elevated" className="p-5 bg-white dark:bg-slate-900 border border-slate-150/70 dark:border-slate-800 shadow-xs text-xs flex flex-col gap-4">
                       <h4 className="font-heading font-extrabold text-sm">Service Level Metrics</h4>
                       <div className="flex flex-col gap-3">
-                        <div className="flex justify-between border-b pb-2 border-slate-100 dark:border-slate-800 font-semibold text-slate-455">
+                        <div className="flex justify-between border-b pb-2 border-slate-100 dark:border-slate-800 font-semibold text-slate-500">
                           <span>Average Wait Time:</span>
                           <strong className="text-slate-800 dark:text-slate-100">12.5 minutes</strong>
                         </div>
-                        <div className="flex justify-between border-b pb-2 border-slate-100 dark:border-slate-800 font-semibold text-slate-455">
+                        <div className="flex justify-between border-b pb-2 border-slate-100 dark:border-slate-800 font-semibold text-slate-500">
                           <span>Completion Rate:</span>
                           <strong className="text-emerald-500">92.4%</strong>
                         </div>
-                        <div className="flex justify-between font-semibold text-slate-455">
+                        <div className="flex justify-between font-semibold text-slate-500">
                           <span>Average consult time:</span>
-                          <strong className="text-slate-850 dark:text-slate-100">9.2 mins/room</strong>
+                          <strong className="text-slate-800 dark:text-slate-100">9.2 mins/room</strong>
                         </div>
                       </div>
                     </Card>
@@ -1974,7 +1974,7 @@ export default function BookMyDocApp() {
                 <div className="flex flex-col gap-6">
                   
                   <div>
-                    <h3 className="text-xs font-bold text-slate-405 dark:text-slate-500 uppercase tracking-widest">Desk Settings</h3>
+                    <h3 className="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Desk Settings</h3>
                     <span className="text-[11px] text-slate-400 font-semibold block mt-0.5">Control preferences for receptionist environment</span>
                   </div>
 
@@ -1986,7 +1986,7 @@ export default function BookMyDocApp() {
                         <span className="text-[10px] text-slate-400 font-semibold block mt-1">Generates clinic activity automatically</span>
                       </div>
                       <button onClick={() => setReceptionistAutoSimulate(!receptionistAutoSimulate)} className="text-[#0F8B8D] focus:outline-none">
-                        {receptionistAutoSimulate ? <ToggleRight className="w-10 h-10" /> : <ToggleLeft className="w-10 h-10 text-slate-350" />}
+                        {receptionistAutoSimulate ? <ToggleRight className="w-10 h-10" /> : <ToggleLeft className="w-10 h-10 text-slate-400" />}
                       </button>
                     </div>
 
@@ -1996,7 +1996,7 @@ export default function BookMyDocApp() {
                         <span className="text-[10px] text-slate-400 font-semibold block mt-1">Toggle dark UI theme</span>
                       </div>
                       <button onClick={() => setDarkMode(!darkMode)} className="text-[#0F8B8D] focus:outline-none">
-                        {darkMode ? <ToggleRight className="w-10 h-10" /> : <ToggleLeft className="w-10 h-10 text-slate-350" />}
+                        {darkMode ? <ToggleRight className="w-10 h-10" /> : <ToggleLeft className="w-10 h-10 text-slate-400" />}
                       </button>
                     </div>
                   </Card>
@@ -2017,7 +2017,7 @@ export default function BookMyDocApp() {
               >
                 <button 
                   onClick={() => setSelectedPatientForDrawer(null)}
-                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-655 hover:bg-slate-55 transition-colors focus:outline-none"
+                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -2027,28 +2027,28 @@ export default function BookMyDocApp() {
                     {selectedPatientForDrawer.name[0]}
                   </div>
                   <div>
-                    <h3 className="font-heading font-extrabold text-[16px] text-slate-850 dark:text-slate-100 leading-none">{selectedPatientForDrawer.name}</h3>
+                    <h3 className="font-heading font-extrabold text-[16px] text-slate-800 dark:text-slate-100 leading-none">{selectedPatientForDrawer.name}</h3>
                     <span className="text-[10px] text-slate-400 font-semibold block mt-1.5">{selectedPatientForDrawer.phone}</span>
                     <span className="text-[10px] text-slate-400 font-semibold block">{selectedPatientForDrawer.email}</span>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-4">
-                  <h4 className="font-bold text-[11px] text-slate-450 uppercase tracking-widest">Medical Summary</h4>
-                  <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-955 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/40">
+                  <h4 className="font-bold text-[11px] text-slate-400 uppercase tracking-widest">Medical Summary</h4>
+                  <div className="grid grid-cols-2 gap-4 bg-slate-50 dark:bg-slate-950 p-4 rounded-2xl border border-slate-100 dark:border-slate-800/40">
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Blood Group</span>
-                      <strong className="text-slate-855 dark:text-slate-205 text-sm mt-0.5 block">{selectedPatientForDrawer.bloodGroup}</strong>
+                      <strong className="text-slate-800 dark:text-slate-200 text-sm mt-0.5 block">{selectedPatientForDrawer.bloodGroup}</strong>
                     </div>
                     <div>
                       <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider block">Emergency Dial</span>
-                      <strong className="text-slate-855 dark:text-slate-205 text-sm mt-0.5 block truncate">{selectedPatientForDrawer.emergencyContact.name} ({selectedPatientForDrawer.emergencyContact.relation})</strong>
+                      <strong className="text-slate-800 dark:text-slate-200 text-sm mt-0.5 block truncate">{selectedPatientForDrawer.emergencyContact.name} ({selectedPatientForDrawer.emergencyContact.relation})</strong>
                     </div>
                   </div>
 
                   {selectedPatientForDrawer.allergies && selectedPatientForDrawer.allergies.length > 0 && (
                     <div className="flex flex-col gap-1.5">
-                      <span className="text-[9px] text-slate-450 uppercase font-bold tracking-widest">Allergies List</span>
+                      <span className="text-[9px] text-slate-400 uppercase font-bold tracking-widest">Allergies List</span>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedPatientForDrawer.allergies.map(a => <Badge key={a} variant="error" size="xs" dot className="font-bold">{a}</Badge>)}
                       </div>
@@ -2057,7 +2057,7 @@ export default function BookMyDocApp() {
 
                   {selectedPatientForDrawer.medicalConditions && selectedPatientForDrawer.medicalConditions.length > 0 && (
                     <div className="flex flex-col gap-1.5">
-                      <span className="text-[9px] text-slate-455 uppercase font-bold tracking-widest">Pre-existing Conditions</span>
+                      <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Pre-existing Conditions</span>
                       <div className="flex flex-wrap gap-1.5">
                         {selectedPatientForDrawer.medicalConditions.map(c => <Badge key={c} variant="neutral" size="xs" className="font-bold">{c}</Badge>)}
                       </div>
@@ -2066,31 +2066,31 @@ export default function BookMyDocApp() {
 
                   {/* Vitals */}
                   <div className="flex flex-col gap-2">
-                    <span className="text-[9px] text-slate-455 uppercase font-bold tracking-widest">Vitals Status Checklist</span>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest">Vitals Status Checklist</span>
                     <div className="grid grid-cols-3 gap-2 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800/40 text-center">
                       <div>
                         <span className="text-[8px] text-slate-400 block font-bold">BP</span>
-                        <strong className="text-slate-700 dark:text-slate-202 text-xs">{selectedPatientForDrawer.vitals.bloodPressure}</strong>
+                        <strong className="text-slate-700 dark:text-slate-200 text-xs">{selectedPatientForDrawer.vitals.bloodPressure}</strong>
                       </div>
                       <div>
                         <span className="text-[8px] text-slate-400 block font-bold">Heart Rate</span>
-                        <strong className="text-slate-700 dark:text-slate-202 text-xs">{selectedPatientForDrawer.vitals.heartRate} bpm</strong>
+                        <strong className="text-slate-700 dark:text-slate-200 text-xs">{selectedPatientForDrawer.vitals.heartRate} bpm</strong>
                       </div>
                       <div>
                         <span className="text-[8px] text-slate-400 block font-bold">Pulse</span>
-                        <strong className="text-slate-700 dark:text-slate-202 text-xs">{selectedPatientForDrawer.vitals.pulse}</strong>
+                        <strong className="text-slate-700 dark:text-slate-200 text-xs">{selectedPatientForDrawer.vitals.pulse}</strong>
                       </div>
                     </div>
                   </div>
 
                   {/* Previous Appointments logs */}
                   <div className="flex flex-col gap-2.5">
-                    <span className="text-[9px] text-slate-455 uppercase font-bold tracking-widest block">Previous Consultation Visits</span>
+                    <span className="text-[9px] text-slate-500 uppercase font-bold tracking-widest block">Previous Consultation Visits</span>
                     <div className="flex flex-col gap-2 max-h-44 overflow-y-auto pr-1 scrollbar-none">
                       {appointments
                         .filter(a => a.patientId === selectedPatientForDrawer.id)
                         .map((appt, i) => (
-                          <div key={i} className="bg-slate-50/70 dark:bg-slate-955/70 p-3 rounded-2xl border border-slate-100 dark:border-slate-800/40 flex justify-between items-center">
+                          <div key={i} className="bg-slate-50/70 dark:bg-slate-950/70 p-3 rounded-2xl border border-slate-100 dark:border-slate-800/40 flex justify-between items-center">
                             <div>
                               <strong className="text-xs text-slate-700 dark:text-slate-200 block">{appt.doctorName}</strong>
                               <span className="text-[10px] text-slate-400 font-semibold block mt-0.5">{appt.date} • {appt.time}</span>
@@ -2107,16 +2107,16 @@ export default function BookMyDocApp() {
 
           {/* Booking Screen dialog overlay */}
           {receptionistBookingOpen && (
-            <div className="absolute inset-0 bg-slate-955/40 backdrop-blur-xs z-50 flex items-center justify-center p-6 animate-fade-in">
+            <div className="absolute inset-0 bg-slate-950/40 backdrop-blur-xs z-50 flex items-center justify-center p-6 animate-fade-in">
               <Card variant="elevated" className="w-full max-w-md p-6 bg-white relative flex flex-col gap-4 text-xs shadow-premium rounded-3xl border border-slate-100 animate-scale-in">
                 <button 
                   onClick={() => setReceptionistBookingOpen(false)}
-                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-655 hover:bg-slate-50 transition-colors focus:outline-none"
+                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
 
-                <h3 className="font-heading font-extrabold text-base text-slate-855">Book Patient Appointment</h3>
+                <h3 className="font-heading font-extrabold text-base text-slate-800">Book Patient Appointment</h3>
                 
                 {receptionistBookSuccess ? (
                   <div className="flex flex-col items-center gap-4 py-8 text-center animate-scale-in">
@@ -2132,7 +2132,7 @@ export default function BookMyDocApp() {
                   <form onSubmit={handleReceptionistBookSubmit} className="flex flex-col gap-4 animate-scale-in">
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1">
-                        <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Patient Full Name</label>
+                        <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Patient Full Name</label>
                         <input 
                           type="text" 
                           required
@@ -2143,7 +2143,7 @@ export default function BookMyDocApp() {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Phone Number</label>
+                        <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Phone Number</label>
                         <input 
                           type="tel" 
                           required
@@ -2156,7 +2156,7 @@ export default function BookMyDocApp() {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Select Dermatologist</label>
+                      <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Select Dermatologist</label>
                       <select 
                         value={receptionistBookDoctorId}
                         onChange={(e) => setReceptionistBookDoctorId(e.target.value)}
@@ -2170,7 +2170,7 @@ export default function BookMyDocApp() {
 
                     <div className="grid grid-cols-2 gap-4">
                       <div className="flex flex-col gap-1">
-                        <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Appointment Date</label>
+                        <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Appointment Date</label>
                         <input 
                           type="date" 
                           required
@@ -2181,7 +2181,7 @@ export default function BookMyDocApp() {
                         />
                       </div>
                       <div className="flex flex-col gap-1">
-                        <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Select Time Slot</label>
+                        <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Select Time Slot</label>
                         <select 
                           value={receptionistBookTime}
                           onChange={(e) => setReceptionistBookTime(e.target.value)}
@@ -2195,7 +2195,7 @@ export default function BookMyDocApp() {
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <label className="block text-[9.5px] text-slate-405 font-bold uppercase tracking-wider">Reason for Visit</label>
+                      <label className="block text-[9.5px] text-slate-400 font-bold uppercase tracking-wider">Reason for Visit</label>
                       <input 
                         type="text" 
                         value={receptionistBookReason}
@@ -2220,14 +2220,14 @@ export default function BookMyDocApp() {
               <Card variant="elevated" className="w-full max-w-sm p-6 flex flex-col gap-4.5 relative bg-white border border-slate-100/80 shadow-premium rounded-3xl animate-scale-in">
                 <button 
                   onClick={() => setReceptionistShowWalkinModal(false)}
-                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-655 hover:bg-slate-55 transition-colors focus:outline-none"
+                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
                 <h4 className="font-heading font-black text-base text-slate-800">Add Walk-In Patient</h4>
                 <form onSubmit={handleReceptionistAddWalkin} className="flex flex-col gap-4 text-xs">
                   <div>
-                    <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Patient Full Name</label>
+                    <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Patient Full Name</label>
                     <input 
                       type="text" 
                       value={receptionistWalkinName} 
@@ -2237,7 +2237,7 @@ export default function BookMyDocApp() {
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Phone Number</label>
+                    <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Phone Number</label>
                     <input 
                       type="tel" 
                       value={receptionistWalkinPhone} 
@@ -2247,7 +2247,7 @@ export default function BookMyDocApp() {
                     />
                   </div>
                   <div>
-                    <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Select Dermatologist</label>
+                    <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Select Dermatologist</label>
                     <select 
                       value={receptionistWalkinDoctor} 
                       onChange={(e) => setReceptionistWalkinDoctor(e.target.value)} 
@@ -2303,7 +2303,7 @@ export default function BookMyDocApp() {
                         "flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 focus:outline-none",
                         {
                           "gradient-primary text-white shadow-md shadow-primary/10": doctorTab === item.id,
-                          "text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-55 dark:hover:bg-slate-800/50": doctorTab !== item.id
+                          "text-slate-500 dark:text-slate-400 hover:text-slate-700 hover:bg-slate-50 dark:hover:bg-slate-800/50": doctorTab !== item.id
                         }
                       )}
                     >
@@ -2336,7 +2336,7 @@ export default function BookMyDocApp() {
                     { status: 'Available', color: 'bg-emerald-500' },
                     { status: 'Busy', color: 'bg-amber-500' },
                     { status: 'On Break', color: 'bg-indigo-500' },
-                    { status: 'Offline', color: 'bg-slate-450' }
+                    { status: 'Offline', color: 'bg-slate-400' }
                   ].map((s) => (
                     <button
                       key={s.status}
@@ -2393,7 +2393,7 @@ export default function BookMyDocApp() {
                 <div className="relative">
                   <button 
                     onClick={() => setShowNotificationOverlay(true)}
-                    className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-505 hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors relative focus:outline-none border border-slate-100 dark:border-slate-800"
+                    className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-700/50 transition-colors relative focus:outline-none border border-slate-100 dark:border-slate-800"
                   >
                     <Bell className="w-4.5 h-4.5" />
                     {notifications.filter(n => !n.read).length > 0 && (
@@ -2447,12 +2447,12 @@ export default function BookMyDocApp() {
                               </div>
                               <div>
                                 <div className="flex items-center gap-2">
-                                  <h3 className="font-heading font-black text-[16px] text-slate-850 dark:text-slate-100">{activeDocPatient.name}</h3>
-                                  <span className="text-[10px] bg-slate-50 text-slate-655 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">
+                                  <h3 className="font-heading font-black text-[16px] text-slate-800 dark:text-slate-100">{activeDocPatient.name}</h3>
+                                  <span className="text-[10px] bg-slate-50 text-slate-600 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">
                                     Token {appointments.find(a => a.patientId === activeDocPatient.id && a.date === getDateOffset(0))?.token || 'T-XX'}
                                   </span>
                                 </div>
-                                <span className="text-xs text-slate-450 block mt-1">
+                                <span className="text-xs text-slate-400 block mt-1">
                                   {activeDocPatient.vitals.height}cm • {activeDocPatient.vitals.weight}kg • {activeDocPatient.bloodGroup} Blood Group
                                 </span>
                               </div>
@@ -2499,7 +2499,7 @@ export default function BookMyDocApp() {
                           {/* Chief Complaint / Consultation Reason */}
                           <div className="bg-slate-50 dark:bg-slate-900/40 p-4 rounded-2xl border border-slate-100 dark:border-slate-800 text-xs flex flex-col gap-1.5">
                             <span className="text-[9px] text-slate-400 font-black uppercase tracking-wider">Chief Complaint / Diagnosis Reason</span>
-                            <p className="text-slate-655 dark:text-slate-300 font-semibold leading-relaxed">
+                            <p className="text-slate-600 dark:text-slate-300 font-semibold leading-relaxed">
                               {appointments.find(a => a.patientId === activeDocPatient.id && a.date === getDateOffset(0))?.reason || 'Routine general dermatology screening and follow-up.'}
                             </p>
                           </div>
@@ -2524,7 +2524,7 @@ export default function BookMyDocApp() {
                                       "flex items-center gap-2 pb-2.5 px-3 text-[11px] font-bold transition-all border-b-2 -mb-[11px] focus:outline-none whitespace-nowrap",
                                       {
                                         "border-[#0F8B8D] text-[#0F8B8D]": doctorConsultWorkspaceTab === t.id,
-                                        "border-transparent text-slate-455 hover:text-slate-700": doctorConsultWorkspaceTab !== t.id
+                                        "border-transparent text-slate-500 hover:text-slate-700": doctorConsultWorkspaceTab !== t.id
                                       }
                                     )}
                                   >
@@ -2543,7 +2543,7 @@ export default function BookMyDocApp() {
                                   value={doctorConsultNotes}
                                   onChange={(e) => setDoctorConsultNotes(e.target.value)}
                                   placeholder="Document patient complaints, clinical findings, skin diagnoses, lesions parameters, etc."
-                                  className="w-full p-4 border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-55 dark:bg-slate-900 focus:outline-none focus:border-primary focus:bg-white text-xs h-32 transition-all leading-relaxed"
+                                  className="w-full p-4 border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900 focus:outline-none focus:border-primary focus:bg-white text-xs h-32 transition-all leading-relaxed"
                                 />
                               </div>
                             )}
@@ -2663,11 +2663,11 @@ export default function BookMyDocApp() {
                                           <div className="flex items-center gap-2">
                                             <span className="w-5 h-5 rounded-full bg-emerald-100 flex items-center justify-center text-emerald-700 text-[10px] font-black">{idx + 1}</span>
                                             <strong className="text-slate-800 dark:text-slate-150 font-bold">{rx.name}</strong>
-                                            <span className="text-[10px] bg-slate-55 text-slate-500 px-1.5 py-0.5 rounded font-semibold">{rx.dosage}</span>
+                                            <span className="text-[10px] bg-slate-50 text-slate-500 px-1.5 py-0.5 rounded font-semibold">{rx.dosage}</span>
                                             <span className="text-[10px] text-slate-400 font-semibold">• {rx.timing}</span>
                                           </div>
                                           <div className="flex items-center gap-3">
-                                            <span className="text-[10.5px] text-slate-450 font-bold">{rx.duration}</span>
+                                            <span className="text-[10.5px] text-slate-400 font-bold">{rx.duration}</span>
                                             <button
                                               onClick={() => setDoctorPrescriptionsList(prev => prev.filter((_, i) => i !== idx))}
                                               className="text-rose-500 hover:text-rose-750 font-bold px-1 text-[11px] focus:outline-none"
@@ -2690,7 +2690,7 @@ export default function BookMyDocApp() {
                             {/* Tab Content 3: LAB ORDERS */}
                             {doctorConsultWorkspaceTab === 'lab' && (
                               <div className="flex flex-col gap-4 pt-2">
-                                <span className="text-[10px] text-slate-455 font-bold uppercase tracking-wider pl-1">Order Dermatology / Lab Screenings</span>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider pl-1">Order Dermatology / Lab Screenings</span>
                                 
                                 <div className="grid grid-cols-2 gap-3">
                                   {[
@@ -2713,7 +2713,7 @@ export default function BookMyDocApp() {
                                           "p-3.5 border rounded-2xl text-xs font-bold transition-all text-left flex justify-between items-center focus:outline-none shadow-3xs",
                                           {
                                             "bg-primary-light/45 border-primary text-[#0F8B8D]": selected,
-                                            "bg-white dark:bg-slate-900 border-slate-200 hover:border-slate-350 text-slate-655 dark:text-slate-300": !selected
+                                            "bg-white dark:bg-slate-900 border-slate-200 hover:border-slate-400 text-slate-600 dark:text-slate-300": !selected
                                           }
                                         )}
                                       >
@@ -2746,7 +2746,7 @@ export default function BookMyDocApp() {
                             {/* Tab Content 4: FOLLOW-UP */}
                             {doctorConsultWorkspaceTab === 'followup' && (
                               <div className="flex flex-col gap-4 pt-2">
-                                <span className="text-[10px] text-slate-455 font-bold uppercase tracking-wider pl-1">Configure Scheduled Return Visit</span>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider pl-1">Configure Scheduled Return Visit</span>
                                 <div className="grid grid-cols-2 gap-4">
                                   <div className="flex flex-col gap-1">
                                     <label className="text-[9px] text-slate-400 font-bold uppercase tracking-wider pl-1">Recommend Return In</label>
@@ -2772,7 +2772,7 @@ export default function BookMyDocApp() {
                                   <input 
                                     type="text"
                                     placeholder="e.g. Keep skin moisturised, avoid direct sunlight and report if red patches spread"
-                                    className="w-full p-3 border border-slate-200 rounded-xl bg-slate-55 focus:outline-none focus:border-primary text-xs"
+                                    className="w-full p-3 border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-primary text-xs"
                                   />
                                 </div>
                               </div>
@@ -2781,7 +2781,7 @@ export default function BookMyDocApp() {
                             {/* Tab Content 5: CERTIFICATE */}
                             {doctorConsultWorkspaceTab === 'certificate' && (
                               <div className="flex flex-col gap-4 pt-2">
-                                <span className="text-[10px] text-slate-455 font-bold uppercase tracking-wider pl-1">Compile Sick Leave / Medical Fitness Certificate</span>
+                                <span className="text-[10px] text-slate-500 font-bold uppercase tracking-wider pl-1">Compile Sick Leave / Medical Fitness Certificate</span>
                                 <div className="grid grid-cols-2 gap-4">
                                   <div>
                                     <label className="text-[9px] text-slate-400 font-bold uppercase tracking-wider pl-1 block mb-1">Rest From Date</label>
@@ -2794,7 +2794,7 @@ export default function BookMyDocApp() {
                                 </div>
                                 <div>
                                   <label className="text-[9px] text-slate-400 font-bold uppercase tracking-wider pl-1 block mb-1">Medical Reason For Leave</label>
-                                  <input type="text" defaultValue="Acute contact dermatitis with severe pruritus requiring topical ointment and bed rest." className="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-55 focus:outline-none focus:border-primary" />
+                                  <input type="text" defaultValue="Acute contact dermatitis with severe pruritus requiring topical ointment and bed rest." className="w-full p-3 border border-slate-200 rounded-xl text-xs bg-slate-50 focus:outline-none focus:border-primary" />
                                 </div>
                                 <Button size="sm" onClick={() => alert("Digital Fitness Certificate compiled! Sent to patient dashboard.")} className="w-full h-10 rounded-xl text-xs font-bold font-sans">
                                   Compile & Issue Fitness Certificate
@@ -2811,7 +2811,7 @@ export default function BookMyDocApp() {
                                 alert("Consultation skipped. Patient placed back in queue.");
                                 handleDoctorCallNext();
                               }}
-                              className="h-11 rounded-2xl text-xs font-bold border-slate-200 hover:border-slate-350 text-slate-655 px-5 focus:outline-none"
+                              className="h-11 rounded-2xl text-xs font-bold border-slate-200 hover:border-slate-400 text-slate-600 px-5 focus:outline-none"
                             >
                               Skip Patient
                             </Button>
@@ -2851,7 +2851,7 @@ export default function BookMyDocApp() {
                     <div className="col-span-1 flex flex-col gap-4">
                       <Card variant="elevated" className="p-5 bg-white border border-slate-100/70 shadow-sm flex flex-col gap-4">
                         <div className="flex justify-between items-center border-b pb-3 border-slate-100">
-                          <h4 className="font-heading font-black text-xs uppercase tracking-wider text-slate-450">Active Queue Lineup</h4>
+                          <h4 className="font-heading font-black text-xs uppercase tracking-wider text-slate-400">Active Queue Lineup</h4>
                           <Badge variant="primary" size="xs">Live Today</Badge>
                         </div>
 
@@ -2901,7 +2901,7 @@ export default function BookMyDocApp() {
                                     <span className="text-[10px] text-slate-400 font-semibold block mt-0.5 pl-3.5">Wait Est: {(idx + 1) * 10} min</span>
                                   </div>
                                   <div className="text-right">
-                                    <span className="text-[10px] bg-slate-50 text-slate-655 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">{qItem.token}</span>
+                                    <span className="text-[10px] bg-slate-50 text-slate-600 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">{qItem.token}</span>
                                   </div>
                                 </div>
                               );
@@ -2984,11 +2984,11 @@ export default function BookMyDocApp() {
                         <div className="flex flex-col gap-2.5">
                           <div className="flex items-center gap-2">
                             <span className="text-[11px] font-bold text-slate-400">{appt.date}</span>
-                            <span className="text-[10px] bg-slate-55 text-slate-650 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">{appt.token}</span>
+                            <span className="text-[10px] bg-slate-50 text-slate-600 px-2 py-0.5 rounded-lg font-bold border border-slate-200/40">{appt.token}</span>
                           </div>
                           <div>
                             <strong className="text-slate-800 text-[14px] font-black block">{appt.patientName}</strong>
-                            <span className="text-slate-455 font-semibold block mt-0.5">Reason: {appt.reason}</span>
+                            <span className="text-slate-500 font-semibold block mt-0.5">Reason: {appt.reason}</span>
                           </div>
                           <div className="bg-slate-50/70 p-3 rounded-xl border border-slate-100 text-slate-600">
                             <strong className="font-bold text-slate-800 block mb-0.5">Diagnosis Notes:</strong>
@@ -2996,7 +2996,7 @@ export default function BookMyDocApp() {
                           </div>
                           {appt.prescription && appt.prescription.length > 0 && (
                             <div>
-                              <span className="font-bold text-slate-455 block mb-1">Prescribed Drugs:</span>
+                              <span className="font-bold text-slate-500 block mb-1">Prescribed Drugs:</span>
                               <div className="flex flex-wrap gap-1.5">
                                 {appt.prescription.map((rx) => (
                                   <Badge key={rx.id} variant="secondary" size="xs">
@@ -3025,7 +3025,7 @@ export default function BookMyDocApp() {
                   <Card className="bg-white border border-slate-150 shadow-sm overflow-hidden rounded-3xl">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-slate-50 text-slate-455 font-bold uppercase tracking-wider border-b border-slate-150">
+                        <tr className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-150">
                           <th className="p-4 pl-6">Token</th>
                           <th className="p-4">Patient Name</th>
                           <th className="p-4">Slot Time</th>
@@ -3071,7 +3071,7 @@ export default function BookMyDocApp() {
                     <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 border-b pb-3.5 border-slate-100">Work Hours Configuration</h4>
                     <div className="flex flex-col gap-4 text-xs">
                       <div>
-                        <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Duty Working Hours</label>
+                        <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Duty Working Hours</label>
                         <input 
                           type="text" 
                           value={doctorWorkingHours}
@@ -3080,7 +3080,7 @@ export default function BookMyDocApp() {
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Lunch/Break Hours</label>
+                        <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Lunch/Break Hours</label>
                         <input 
                           type="text" 
                           value={doctorLunchTime}
@@ -3090,7 +3090,7 @@ export default function BookMyDocApp() {
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-slate-455 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Max Patients/Day</label>
+                          <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Max Patients/Day</label>
                           <input 
                             type="number" 
                             value={doctorMaxPatients}
@@ -3099,12 +3099,12 @@ export default function BookMyDocApp() {
                           />
                         </div>
                         <div className="flex flex-col justify-end pb-1.5 pl-2">
-                          <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-655">
+                          <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-600">
                             <input 
                               type="checkbox" 
                               checked={doctorEmergencyAvailable}
                               onChange={(e) => setDoctorEmergencyAvailable(e.target.checked)}
-                              className="rounded border-slate-350 text-primary focus:ring-primary w-4.5 h-4.5"
+                              className="rounded border-slate-400 text-primary focus:ring-primary w-4.5 h-4.5"
                             />
                             <span>Emergency Duty</span>
                           </label>
@@ -3152,7 +3152,7 @@ export default function BookMyDocApp() {
                     ].map((stat, idx) => (
                       <Card key={idx} variant="elevated" className="p-5 flex flex-col gap-1 bg-white border border-slate-100 shadow-xs">
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{stat.label}</span>
-                        <span className="text-2xl font-black font-heading text-slate-850 mt-1 block">{stat.val}</span>
+                        <span className="text-2xl font-black font-heading text-slate-800 mt-1 block">{stat.val}</span>
                         <span className="text-[9px] text-slate-400 font-bold block mt-1">{stat.desc}</span>
                       </Card>
                     ))}
@@ -3237,7 +3237,7 @@ export default function BookMyDocApp() {
                   </h4>
                   <button
                     onClick={() => setDoctorSelectedPatientId(null)}
-                    className="p-1 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors focus:outline-none"
+                    className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors focus:outline-none"
                   >
                     <X className="w-5 h-5" />
                   </button>
@@ -3252,7 +3252,7 @@ export default function BookMyDocApp() {
                     <div>
                       <strong className="text-slate-800 dark:text-slate-100 font-black text-[15px] block">{filePatient.name}</strong>
                       <span className="text-slate-400 font-semibold mt-0.5 block">{filePatient.phone} • {filePatient.email}</span>
-                      <span className="text-[10px] text-slate-505 font-semibold block mt-0.5">Insurance Provider: {filePatient.insurance.provider} (Policy {filePatient.insurance.policyNumber})</span>
+                      <span className="text-[10px] text-slate-500 font-semibold block mt-0.5">Insurance Provider: {filePatient.insurance.provider} (Policy {filePatient.insurance.policyNumber})</span>
                     </div>
                   </div>
 
@@ -3268,7 +3268,7 @@ export default function BookMyDocApp() {
                     ].map((v, idx) => (
                       <div key={idx} className="border border-slate-100 dark:border-slate-800 p-2.5 rounded-xl bg-white dark:bg-slate-900">
                         <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">{v.label}</span>
-                        <strong className="text-slate-700 dark:text-slate-350 text-xs block font-black mt-0.5">{v.val}</strong>
+                        <strong className="text-slate-700 dark:text-slate-400 text-xs block font-black mt-0.5">{v.val}</strong>
                       </div>
                     ))}
                   </div>
@@ -3285,7 +3285,7 @@ export default function BookMyDocApp() {
 
                   {/* Previous visit logs timeline derived dynamically */}
                   <div className="flex flex-col gap-3 border-t border-slate-100 dark:border-slate-800 pt-4">
-                    <span className="text-[10.5px] text-slate-455 font-bold uppercase tracking-wider pl-1 block">Clinical Consultations Timeline History</span>
+                    <span className="text-[10.5px] text-slate-500 font-bold uppercase tracking-wider pl-1 block">Clinical Consultations Timeline History</span>
                     
                     {appointments.filter(a => a.patientId === filePatient.id && a.status === 'Completed').length > 0 ? (
                       <div className="flex flex-col gap-3 pl-2 border-l-2 border-[#0F8B8D]/20 ml-2">
@@ -3332,7 +3332,7 @@ export default function BookMyDocApp() {
                 {/* Close Button */}
                 <button
                   onClick={() => setDoctorRxPrintOpen(false)}
-                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors focus:outline-none"
+                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -3355,19 +3355,19 @@ export default function BookMyDocApp() {
                 <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4.5 rounded-2xl border border-slate-100 text-xs">
                   <div>
                     <span className="text-slate-400 font-bold block">Patient Name:</span>
-                    <strong className="text-slate-850 font-black">{activeDocPatient.name}</strong>
+                    <strong className="text-slate-800 font-black">{activeDocPatient.name}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-455 font-bold block text-right">Consultation Date:</span>
-                    <strong className="text-slate-850 font-black block text-right">{getDateOffset(0)}</strong>
+                    <span className="text-slate-500 font-bold block text-right">Consultation Date:</span>
+                    <strong className="text-slate-800 font-black block text-right">{getDateOffset(0)}</strong>
                   </div>
                   <div>
                     <span className="text-slate-400 font-bold block">Age / Gender:</span>
-                    <strong className="text-slate-850 font-black">28 Yrs / Female</strong>
+                    <strong className="text-slate-800 font-black">28 Yrs / Female</strong>
                   </div>
                   <div>
-                    <span className="text-slate-455 font-bold block text-right">Queue Token Reference:</span>
-                    <strong className="text-slate-850 font-black block text-right">
+                    <span className="text-slate-500 font-bold block text-right">Queue Token Reference:</span>
+                    <strong className="text-slate-800 font-black block text-right">
                       {appointments.find(a => a.patientId === activeDocPatient.id && a.date === getDateOffset(0))?.token || 'T-XX'}
                     </strong>
                   </div>
@@ -3383,8 +3383,8 @@ export default function BookMyDocApp() {
                     {doctorPrescriptionsList.map((rx, idx) => (
                       <div key={idx} className="flex justify-between items-baseline">
                         <div>
-                          <strong className="font-extrabold text-slate-850">{idx + 1}. {rx.name}</strong>
-                          <span className="text-slate-450 font-semibold block text-[10.5px] mt-0.5">Instructions: {rx.dosage} ({rx.timing})</span>
+                          <strong className="font-extrabold text-slate-800">{idx + 1}. {rx.name}</strong>
+                          <span className="text-slate-400 font-semibold block text-[10.5px] mt-0.5">Instructions: {rx.dosage} ({rx.timing})</span>
                         </div>
                         <span className="text-slate-500 font-bold text-[11px]">{rx.duration}</span>
                       </div>
@@ -3438,7 +3438,7 @@ export default function BookMyDocApp() {
                 {/* Close Button */}
                 <button
                   onClick={() => setDoctorLabRequestGenerated(false)}
-                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-450 hover:text-slate-655 hover:bg-slate-50 transition-colors focus:outline-none"
+                  className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors focus:outline-none"
                 >
                   <X className="w-5 h-5" />
                 </button>
@@ -3446,7 +3446,7 @@ export default function BookMyDocApp() {
                 {/* Letterhead */}
                 <div className="flex justify-between items-start border-b-2 border-slate-150 pb-5">
                   <div>
-                    <h3 className="font-heading font-black text-base text-slate-850">DR. IRFANA PATIL, MD</h3>
+                    <h3 className="font-heading font-black text-base text-slate-800">DR. IRFANA PATIL, MD</h3>
                     <span className="text-[10px] text-slate-400 uppercase tracking-widest font-black block mt-0.5">Dermatologist & Cosmetologist</span>
                     <span className="text-[9.5px] text-slate-400 block">Licence REG-490802-A</span>
                   </div>
@@ -3460,15 +3460,15 @@ export default function BookMyDocApp() {
                 <div className="grid grid-cols-2 gap-4 bg-slate-50 p-4.5 rounded-2xl border border-slate-100 text-xs">
                   <div>
                     <span className="text-slate-400 font-bold block">Patient Name:</span>
-                    <strong className="text-slate-850 font-black">{activeDocPatient.name}</strong>
+                    <strong className="text-slate-800 font-black">{activeDocPatient.name}</strong>
                   </div>
                   <div>
-                    <span className="text-slate-455 font-bold block text-right">Date:</span>
-                    <strong className="text-slate-850 font-black block text-right">{getDateOffset(0)}</strong>
+                    <span className="text-slate-500 font-bold block text-right">Date:</span>
+                    <strong className="text-slate-800 font-black block text-right">{getDateOffset(0)}</strong>
                   </div>
                   <div>
                     <span className="text-slate-400 font-bold block">Token Number:</span>
-                    <strong className="text-slate-850 font-black">
+                    <strong className="text-slate-800 font-black">
                       {appointments.find(a => a.patientId === activeDocPatient.id && a.date === getDateOffset(0))?.token || 'T-XX'}
                     </strong>
                   </div>
@@ -3480,8 +3480,8 @@ export default function BookMyDocApp() {
                   <div className="flex flex-col gap-3 pl-3 border-l-2 border-[#0F8B8D]/30">
                     {doctorSelectedLabTests.map((test, idx) => (
                       <div key={idx} className="flex items-center gap-2 text-xs">
-                        <span className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-655 text-[10px] font-black">{idx + 1}</span>
-                        <strong className="text-slate-855 font-extrabold">{test}</strong>
+                        <span className="w-5 h-5 rounded-full bg-slate-100 flex items-center justify-center text-slate-600 text-[10px] font-black">{idx + 1}</span>
+                        <strong className="text-slate-800 font-extrabold">{test}</strong>
                       </div>
                     ))}
                   </div>
@@ -3494,7 +3494,7 @@ export default function BookMyDocApp() {
                     Please present this at the clinic desk.
                   </div>
                   <div className="text-center w-36">
-                    <div className="h-9 border-b border-slate-350 flex items-center justify-center font-serif text-[#0F8B8D] italic text-xs">
+                    <div className="h-9 border-b border-slate-400 flex items-center justify-center font-serif text-[#0F8B8D] italic text-xs">
                       Dr. I. Patil
                     </div>
                   </div>
@@ -4061,12 +4061,12 @@ export default function BookMyDocApp() {
                               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
                               <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
                             </span>
-                            <span className="text-slate-650 dark:text-slate-350">
+                            <span className="text-slate-600 dark:text-slate-400">
                               Serving: <strong className="text-primary font-bold">{todayQueue.currentToken}</strong>
                             </span>
                           </div>
                           <span className="text-slate-500">
-                            <strong className="text-slate-800 dark:text-slate-250 font-bold">{todayQueue.patientsAhead}</strong> ahead ({todayQueue.estimatedWaitTime}m wait)
+                            <strong className="text-slate-800 dark:text-slate-200 font-bold">{todayQueue.patientsAhead}</strong> ahead ({todayQueue.estimatedWaitTime}m wait)
                           </span>
                         </div>
                       )}
@@ -4270,7 +4270,7 @@ export default function BookMyDocApp() {
                                     {doc.rating}
                                   </div>
                                 </div>
-                                <span className="text-[11px] text-slate-450 block mt-0.5 font-medium">{doc.qualification}</span>
+                                <span className="text-[11px] text-slate-400 block mt-0.5 font-medium">{doc.qualification}</span>
                                 <span className="text-[12px] font-bold text-primary block mt-1.5">{doc.clinicName}</span>
                                 <span className="text-[11px] text-slate-500 flex items-center gap-1 mt-1 font-medium"><MapPin className="w-3.5 h-3.5 text-slate-400" /> {doc.clinicAddress.split(',')[0]}</span>
                               </div>
@@ -4439,7 +4439,7 @@ export default function BookMyDocApp() {
                               </div>
                             ) : (
                               <div className="flex flex-col items-center gap-2 text-slate-400 text-xs">
-                                <Plus className="w-8 h-8 text-slate-350" />
+                                <Plus className="w-8 h-8 text-slate-400" />
                                 <span className="font-semibold text-slate-500">Click to mock upload file</span>
                               </div>
                             )}
@@ -4455,19 +4455,19 @@ export default function BookMyDocApp() {
                     {/* Step: Payment Summary Checkout */}
                     {bookingStep === 'payment' && (
                       <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex flex-col gap-4">
-                        <h4 className="text-[14px] font-bold text-slate-700 dark:text-slate-250 uppercase tracking-wider">Checkout Summary</h4>
+                        <h4 className="text-[14px] font-bold text-slate-700 dark:text-slate-200 uppercase tracking-wider">Checkout Summary</h4>
                         
                         <Card variant="elevated" className="p-5 border border-slate-100/60 flex flex-col gap-4 text-xs bg-slate-50/20">
                           <div className="flex justify-between">
-                            <span className="text-slate-450 font-semibold">Consultation Fee</span>
+                            <span className="text-slate-400 font-semibold">Consultation Fee</span>
                             <span className="font-bold text-slate-800 dark:text-slate-100">₹{selectedDoctor.fees}.00</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-450 font-semibold">Booking Charges</span>
+                            <span className="text-slate-400 font-semibold">Booking Charges</span>
                             <span className="font-bold text-slate-800 dark:text-slate-100">₹0.00</span>
                           </div>
                           <div className="flex justify-between">
-                            <span className="text-slate-450 font-semibold">Tax & GST</span>
+                            <span className="text-slate-400 font-semibold">Tax & GST</span>
                             <span className="font-bold text-slate-800 dark:text-slate-100">₹0.00</span>
                           </div>
                           <div className="border-t border-slate-150 pt-4 flex justify-between text-[13px] font-extrabold text-slate-800 dark:text-slate-150">
@@ -4479,13 +4479,13 @@ export default function BookMyDocApp() {
                         <div className="flex flex-col gap-3.5 text-xs mt-2">
                           <span className="font-bold text-slate-400 uppercase tracking-widest text-[10px]">Select UPI App</span>
                           <div className="grid grid-cols-3 gap-2.5">
-                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-350 shadow-xs">
+                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-400 shadow-xs">
                               Google Pay
                             </button>
-                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-350 shadow-xs">
+                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-400 shadow-xs">
                               PhonePe
                             </button>
-                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-350 shadow-xs">
+                            <button className="p-3.5 border border-slate-200 rounded-2xl bg-white dark:bg-slate-900 dark:border-slate-800 font-bold flex items-center justify-center gap-1 hover:border-primary hover:bg-primary-50/10 transition-all duration-200 text-[11px] text-slate-700 dark:text-slate-400 shadow-xs">
                               Paytm
                             </button>
                           </div>
@@ -4661,7 +4661,7 @@ export default function BookMyDocApp() {
                             </div>
                           ) : (
                             <div className="text-center py-5">
-                              <span className="text-xl font-bold text-slate-450 block">All Caught Up!</span>
+                              <span className="text-xl font-bold text-slate-400 block">All Caught Up!</span>
                               <span className="text-[10px] text-slate-400 font-medium mt-1 block">No patient is currently in the consultation room.</span>
                             </div>
                           )}
@@ -4750,13 +4750,13 @@ export default function BookMyDocApp() {
                                 >
                                   <div className="flex items-center gap-3">
                                     <span className={cn("w-9 h-9 rounded-full flex items-center justify-center font-heading font-black text-[11px] shadow-xs", {
-                                      "bg-slate-50 text-slate-650 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300": !isMe,
+                                      "bg-slate-50 text-slate-600 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 dark:text-slate-300": !isMe,
                                       "bg-primary text-white": isMe
                                     })}>
                                       {item.token}
                                     </span>
                                     <div>
-                                      <span className={cn("block text-[13px]", { "text-slate-850 dark:text-slate-200": !isMe, "text-primary font-extrabold": isMe })}>
+                                      <span className={cn("block text-[13px]", { "text-slate-800 dark:text-slate-200": !isMe, "text-primary font-extrabold": isMe })}>
                                         {item.patientName} {isMe && '(You)'}
                                       </span>
                                       <span className="text-[10px] text-slate-400 block font-normal mt-0.5">Estimated wait: {idx * 10 + 10} mins</span>
@@ -4786,7 +4786,7 @@ export default function BookMyDocApp() {
                               const isMe = item.patientId === currentUser.id;
                               return (
                                 <div key={item.id} className="p-3 rounded-2xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-between items-center text-xs shadow-xs">
-                                  <span className="font-semibold text-slate-650 dark:text-slate-350">{item.token} — {item.patientName} {isMe && '(You)'}</span>
+                                  <span className="font-semibold text-slate-600 dark:text-slate-400">{item.token} — {item.patientName} {isMe && '(You)'}</span>
                                   <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">Wait: {((next5Patients.length + remainingWaiting.indexOf(item)) * 10) + 10}m</span>
                                 </div>
                               );
@@ -4801,7 +4801,7 @@ export default function BookMyDocApp() {
                           <h4 className="text-[13px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-3">Completed Today ({completedList.length})</h4>
                           <div className="flex flex-col gap-2.5 max-h-40 overflow-y-auto pr-1 scrollbar-none">
                             {completedList.map((item) => (
-                              <div key={item.id} className="p-3 rounded-2xl border border-slate-100/50 dark:border-slate-850 bg-slate-50/50 dark:bg-slate-900/30 flex justify-between items-center text-xs text-slate-500">
+                              <div key={item.id} className="p-3 rounded-2xl border border-slate-100/50 dark:border-slate-800 bg-slate-50/50 dark:bg-slate-900/30 flex justify-between items-center text-xs text-slate-500">
                                 <span className="font-bold text-slate-600 dark:text-slate-400">{item.token} — {item.patientName}</span>
                                 <Badge variant="success" size="xs" dot>
                                   Completed
@@ -4937,7 +4937,7 @@ export default function BookMyDocApp() {
                           <Badge variant="success" size="sm">Completed</Badge>
                         </div>
                         
-                        <div className="bg-slate-50/70 dark:bg-slate-900 p-3 rounded-2xl text-slate-600 dark:text-slate-350 border border-slate-100/50">
+                        <div className="bg-slate-50/70 dark:bg-slate-900 p-3 rounded-2xl text-slate-600 dark:text-slate-400 border border-slate-100/50">
                           <strong>Diagnosis:</strong> {appt.notes || 'Routine Consult'}
                         </div>
 
@@ -5220,7 +5220,7 @@ export default function BookMyDocApp() {
             <Card variant="elevated" className="w-full max-w-sm p-6 bg-white relative flex flex-col gap-4 text-xs shadow-premium rounded-3xl border border-slate-100">
               <button 
                 onClick={() => setSelectedLabReport(null)}
-                className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors"
+                className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -5230,27 +5230,27 @@ export default function BookMyDocApp() {
                   <FileText className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-450 block font-bold uppercase tracking-wider">DIGITAL LAB REPORT</span>
-                  <h4 className="font-heading font-extrabold text-sm text-slate-850">{selectedLabReport.title}</h4>
+                  <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">DIGITAL LAB REPORT</span>
+                  <h4 className="font-heading font-extrabold text-sm text-slate-800">{selectedLabReport.title}</h4>
                 </div>
               </div>
 
               <div className="flex flex-col gap-3">
                 <div className="flex justify-between">
-                  <span className="text-slate-450 font-semibold">Ordered By:</span>
+                  <span className="text-slate-400 font-semibold">Ordered By:</span>
                   <span className="font-bold text-slate-700">{selectedLabReport.doctorName}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-450 font-semibold">Test Date:</span>
+                  <span className="text-slate-400 font-semibold">Test Date:</span>
                   <span className="font-bold text-slate-700">{selectedLabReport.date}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-slate-450 font-semibold">Report Status:</span>
+                  <span className="text-slate-400 font-semibold">Report Status:</span>
                   <Badge variant={selectedLabReport.status === 'Normal' ? 'success' : 'error'} size="xs" dot>{selectedLabReport.status}</Badge>
                 </div>
               </div>
 
-              <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-slate-650 leading-relaxed">
+              <div className="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 text-slate-600 leading-relaxed">
                 <strong>Test Highlights:</strong><br/>
                 {selectedLabReport.valueSummary}
               </div>
@@ -5273,7 +5273,7 @@ export default function BookMyDocApp() {
             <Card variant="elevated" className="w-full max-w-sm p-6 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 relative flex flex-col gap-4 text-xs shadow-premium rounded-3xl animate-scale-in">
               <button 
                 onClick={() => setRescheduleAppt(null)}
-                className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors"
+                className="absolute top-4.5 right-4.5 p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -5283,18 +5283,18 @@ export default function BookMyDocApp() {
                   <Calendar className="w-6 h-6" />
                 </div>
                 <div>
-                  <span className="text-[9px] text-slate-450 block font-bold uppercase tracking-wider">SCHEDULING ASSISTANT</span>
+                  <span className="text-[9px] text-slate-400 block font-bold uppercase tracking-wider">SCHEDULING ASSISTANT</span>
                   <h4 className="font-heading font-extrabold text-sm text-slate-800 dark:text-slate-100">Reschedule Appointment</h4>
                 </div>
               </div>
 
               {rescheduleError && (
-                <div className="bg-rose-55 border border-rose-100 text-rose-600 p-2.5 rounded-xl font-medium">
+                <div className="bg-rose-50 border border-rose-100 text-rose-600 p-2.5 rounded-xl font-medium">
                   {rescheduleError}
                 </div>
               )}
               {rescheduleSuccess && (
-                <div className="bg-emerald-55 border border-emerald-100 text-emerald-600 p-2.5 rounded-xl font-medium">
+                <div className="bg-emerald-50 border border-emerald-100 text-emerald-600 p-2.5 rounded-xl font-medium">
                   {rescheduleSuccess}
                 </div>
               )}
@@ -5302,7 +5302,7 @@ export default function BookMyDocApp() {
               <div className="flex flex-col gap-3.5">
                 {/* Original Details */}
                 <div className="bg-slate-50/70 dark:bg-slate-800/50 p-3.5 rounded-2xl border border-slate-100 dark:border-slate-800/40 text-slate-500">
-                  <span className="text-[9px] font-bold text-slate-450 uppercase block mb-1.5">Original Slot</span>
+                  <span className="text-[9px] font-bold text-slate-400 uppercase block mb-1.5">Original Slot</span>
                   <div className="flex justify-between font-medium">
                     <span>Doctor: {rescheduleAppt.doctorName}</span>
                     <span>Token: {rescheduleAppt.token}</span>
@@ -5315,7 +5315,7 @@ export default function BookMyDocApp() {
 
                 {/* Form fields */}
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-bold text-slate-650 dark:text-slate-350">Select Dermatologist</label>
+                  <label className="font-bold text-slate-600 dark:text-slate-400">Select Dermatologist</label>
                   <select 
                     value={rescheduleDoctorId}
                     onChange={(e) => setRescheduleDoctorId(e.target.value)}
@@ -5329,21 +5329,21 @@ export default function BookMyDocApp() {
 
                 <div className="grid grid-cols-2 gap-3.5">
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-slate-650 dark:text-slate-350">Select Date</label>
+                    <label className="font-bold text-slate-600 dark:text-slate-400">Select Date</label>
                     <input 
                       type="date"
                       min={getDateOffset(0)}
                       value={rescheduleDate}
                       onChange={(e) => setRescheduleDate(e.target.value)}
-                      className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-250"
+                      className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-200"
                     />
                   </div>
                   <div className="flex flex-col gap-1.5">
-                    <label className="font-bold text-slate-650 dark:text-slate-350">Select Time Slot</label>
+                    <label className="font-bold text-slate-600 dark:text-slate-400">Select Time Slot</label>
                     <select 
                       value={rescheduleTime}
                       onChange={(e) => setRescheduleTime(e.target.value)}
-                      className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-250"
+                      className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-200"
                     >
                       {/* Dynamically list slots for selected doctor */}
                       {(() => {
@@ -5363,13 +5363,13 @@ export default function BookMyDocApp() {
                 </div>
 
                 <div className="flex flex-col gap-1.5">
-                  <label className="font-bold text-slate-650 dark:text-slate-350">Reason for Rescheduling</label>
+                  <label className="font-bold text-slate-600 dark:text-slate-400">Reason for Rescheduling</label>
                   <input 
                     type="text"
                     placeholder="E.g., Medical emergency, travel issues..."
                     value={rescheduleReason}
                     onChange={(e) => setRescheduleReason(e.target.value)}
-                    className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-250"
+                    className="w-full p-2.5 border border-slate-200 rounded-xl bg-slate-50 dark:bg-slate-800 dark:border-slate-700 text-xs focus:outline-none focus:border-primary dark:text-slate-200"
                   />
                 </div>
 
@@ -5418,7 +5418,7 @@ export default function BookMyDocApp() {
                   setNotifications(prev => prev.map(n => ({...n, read: true})));
                   setShowNotificationOverlay(false);
                 }}
-                className="p-1 rounded-xl text-slate-400 hover:text-slate-650 hover:bg-slate-50 transition-colors"
+                className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -5461,7 +5461,7 @@ export default function BookMyDocApp() {
                 <Stethoscope className="w-6 h-6 text-[#0F8B8D]" />
               </div>
               <div className="flex-1">
-                <h4 className="font-heading font-black text-slate-850 dark:text-slate-100 text-sm">Install BookMyDoc</h4>
+                <h4 className="font-heading font-black text-slate-800 dark:text-slate-100 text-sm">Install BookMyDoc</h4>
                 <p className="text-xs text-slate-500 mt-1 leading-relaxed">
                   No more searching for the website. Install BookMyDoc for one-tap access.
                 </p>
