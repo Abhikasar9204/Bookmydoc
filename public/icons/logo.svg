@@ -1,0 +1,33 @@
+
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0F8B8D" />
+      <stop offset="100%" stop-color="#085456" />
+    </linearGradient>
+    <linearGradient id="crossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#EF4444" />
+      <stop offset="100%" stop-color="#DC2626" />
+    </linearGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="512" height="512" rx="128" fill="url(#bgGrad)" />
+  
+  <!-- Glowing Heart Outline -->
+  <path d="M256,420 C256,420 390,330 390,220 C390,150 330,100 280,100 C256,100 256,120 256,120 C256,120 256,100 232,100 C182,100 122,150 122,220 C122,330 256,420 256,420 Z" fill="none" stroke="#7CE7E7" stroke-width="12" stroke-linejoin="round" stroke-linecap="round" opacity="0.45" />
+
+  <!-- Calendar Base -->
+  <rect x="176" y="160" width="160" height="160" rx="24" fill="#FFFFFF" />
+  <!-- Calendar Header Red Bar -->
+  <path d="M176,184 L176,160 C176,146.7 186.7,136 200,136 L312,136 C325.3,136 336,146.7 336,160 L336,184 Z" fill="#EF4444" />
+  <!-- Calendar Ring Hook Holes -->
+  <circle cx="216" cy="136" r="8" fill="#F8FAFC" />
+  <circle cx="296" cy="136" r="8" fill="#F8FAFC" />
+
+  <!-- Medical Cross -->
+  <path d="M244,196 L268,196 L268,220 L292,220 L292,244 L268,244 L268,268 L244,268 L244,244 L220,244 L220,220 L244,220 Z" fill="url(#crossGrad)" />
+
+  <!-- Queue Indicator Badge -->
+  <rect x="206" y="300" width="100" height="40" rx="20" fill="#7CE7E7" stroke="#0F8B8D" stroke-width="6" />
+  <text x="256" y="328" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="900" fill="#085456" text-anchor="middle">T-01</text>
+</svg>
