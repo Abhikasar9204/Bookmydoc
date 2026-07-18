@@ -40,6 +40,8 @@ export default function BookMyDocApp() {
   const [authMode, setAuthMode] = useState<'login' | 'signup' | 'otp'>('login');
   const [patientTab, setPatientTab] = useState<PatientTab>('home');
   const [showRoleSwitcher, setShowRoleSwitcher] = useState(true);
+  const [receptionistSidebarOpen, setReceptionistSidebarOpen] = useState(false);
+  const [doctorSidebarOpen, setDoctorSidebarOpen] = useState(false);
   
   // App Global State (Simulated DB)
   const [doctors, setDoctors] = useState<Doctor[]>(MOCK_DOCTORS);
@@ -165,9 +167,22 @@ export default function BookMyDocApp() {
   useEffect(() => {
     // 1. Service Worker Registration
     if (typeof window !== 'undefined' && 'serviceWorker' in navigator) {
-      navigator.serviceWorker.register('/sw.js')
-        .then((reg) => console.log('[PWA] Service Worker registered:', reg.scope))
-        .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
+      if (process.env.NODE_ENV === 'production') {
+        navigator.serviceWorker.register('/sw.js')
+          .then((reg) => console.log('[PWA] Service Worker registered:', reg.scope))
+          .catch((err) => console.error('[PWA] Service Worker registration failed:', err));
+      } else {
+        // Unregister service workers in development to prevent HMR and Fast Refresh reload loops
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          for (const registration of registrations) {
+            registration.unregister().then((success) => {
+              if (success) {
+                console.log('[PWA] Active Service Worker unregistered for development');
+              }
+            });
+          }
+        });
+      }
     }
 
     // 2. Install Prompt Listener
@@ -1178,10 +1193,16 @@ export default function BookMyDocApp() {
       
       {/* --- LIFTED DESKTOP VIEW: RECEPTIONIST OPERATING CONSOLE DASHBOARD --- */}
       {view === 'receptionist' && (
-        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans">
+        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans relative">
           
           {/* Sidebar */}
-          <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-150 dark:border-slate-800 flex flex-col justify-between p-6 z-20">
+          <aside className={cn(
+            "w-64 bg-white dark:bg-slate-900 border-r border-slate-150 dark:border-slate-800 flex flex-col justify-between p-6 z-20 shrink-0",
+            "fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:relative transition-transform duration-300 ease-in-out",
+            {
+              "translate-x-0": receptionistSidebarOpen
+            }
+          )}>
             <div className="flex flex-col gap-8">
               {/* Logo */}
               <div className="flex items-center gap-3">
@@ -1210,10 +1231,10 @@ export default function BookMyDocApp() {
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setReceptionistTab(item.id as any)}
+                      onClick={() => { setReceptionistTab(item.id as any); setReceptionistSidebarOpen(false); }}
                       className={cn("flex items-center gap-3 px-4 py-3 rounded-2xl text-[13px] font-bold transition-all duration-200 border border-transparent focus:outline-none", {
                         "bg-[#0F8B8D]/10 text-[#0F8B8D] dark:bg-[#0F8B8D]/20": isActive,
-                        "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800": !isActive
+                        "text-slate-500 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-850": !isActive
                       })}
                     >
                       <Icon className="w-5 h-5" />
@@ -1227,7 +1248,7 @@ export default function BookMyDocApp() {
             {/* Sidebar Footer */}
             <div className="flex flex-col gap-4 border-t border-slate-100 dark:border-slate-800 pt-4">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#0F8B8D]/10 dark:bg-[#0F8B8D]/20 text-[#0F8B8D] flex items-center justify-center font-bold text-xs uppercase">
+                <div className="w-9 h-9 rounded-full bg-[#0F8B8D]/10 dark:bg-[#0F8B8D]/20 text-[#0F8B8D] flex items-center justify-center font-bold text-xs uppercase">
                   SC
                 </div>
                 <div>
@@ -1235,15 +1256,15 @@ export default function BookMyDocApp() {
                   <span className="text-[9.5px] text-slate-400 font-semibold block mt-1">Front Desk Officer</span>
                 </div>
               </div>
-              <div className="flex gap-1.5 p-1 bg-slate-50 dark:bg-slate-900/60 border border-slate-150 dark:border-slate-800 rounded-2xl">
+              <div className="flex gap-1.5 p-1 bg-slate-50 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 rounded-2xl">
                 <button
-                  onClick={() => { setView('app'); setPatientTab('home'); }}
+                  onClick={() => { setView('app'); setPatientTab('home'); setReceptionistSidebarOpen(false); }}
                   className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
                 >
                   Patient App
                 </button>
                 <button
-                  onClick={() => setView('doctor')}
+                  onClick={() => { setView('doctor'); setReceptionistSidebarOpen(false); }}
                   className="flex-1 text-[9.5px] font-bold py-2 rounded-xl text-slate-500 hover:bg-white dark:hover:bg-slate-800 hover:text-slate-800 hover:shadow-xs transition-all text-center focus:outline-none"
                 >
                   Doctor Desk
@@ -1252,13 +1273,28 @@ export default function BookMyDocApp() {
             </div>
           </aside>
 
+          {receptionistSidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-15 lg:hidden"
+              onClick={() => setReceptionistSidebarOpen(false)}
+            />
+          )}
+
           {/* Main Area */}
           <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
             {/* Header */}
-            <header className="h-18 bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 px-8 flex justify-between items-center z-10">
-              <div>
-                <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Friday, July 17, 2026</span>
-                <h2 className="text-[17px] font-heading font-black text-slate-800 dark:text-slate-100 mt-0.5">Dermavita Operational Console</h2>
+            <header className="h-18 bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 px-4 md:px-8 flex justify-between items-center z-10 gap-3">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setReceptionistSidebarOpen(true)}
+                  className="p-2 -ml-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden focus:outline-none"
+                >
+                  <Menu className="w-5.5 h-5.5" />
+                </button>
+                <div>
+                  <span className="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest block" suppressHydrationWarning>Friday, July 17, 2026</span>
+                  <h2 className="text-[17px] font-heading font-black text-slate-800 dark:text-slate-100 mt-0.5 leading-none">Dermavita Console</h2>
+                </div>
               </div>
 
               {/* Header Right */}
@@ -1274,12 +1310,12 @@ export default function BookMyDocApp() {
                       "bg-amber-500": !receptionistAutoSimulate
                     })}></span>
                   </span>
-                  <span className="text-[10.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">
+                  <span className="text-[10.5px] font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider hidden sm:inline">
                     {receptionistAutoSimulate ? 'Simulation Active' : 'Simulation Paused'}
                   </span>
                   <button 
                     onClick={() => setReceptionistAutoSimulate(!receptionistAutoSimulate)}
-                    className="text-[9.5px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg font-bold ml-2 transition-colors focus:outline-none"
+                    className="text-[9.5px] bg-slate-200 dark:bg-slate-800 hover:bg-slate-300 dark:hover:bg-slate-700 px-2 py-0.5 rounded-lg font-bold ml-0.5 sm:ml-2 transition-colors focus:outline-none"
                   >
                     {receptionistAutoSimulate ? 'Pause' : 'Resume'}
                   </button>
@@ -1299,7 +1335,7 @@ export default function BookMyDocApp() {
             </header>
 
             {/* Dashboard Content Container */}
-            <div className="flex-1 overflow-y-auto p-8 pb-20">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 pb-20">
               
               {/* --- DASHBOARD TAB CONTENT --- */}
               {receptionistTab === 'dashboard' && (
@@ -1701,7 +1737,7 @@ export default function BookMyDocApp() {
                               {servingAppt ? (
                                 <div className="bg-primary/5 dark:bg-primary-955/10 border-2 border-primary/20 p-4 rounded-2xl flex justify-between items-center">
                                   <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-sm uppercase">
+                                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold text-sm uppercase">
                                       {servingAppt.patientName[0]}
                                     </div>
                                     <div className="text-left">
@@ -1739,7 +1775,7 @@ export default function BookMyDocApp() {
                                   {q.timeline.filter(t => t.status === 'waiting').map((item, idx) => (
                                     <div key={idx} className="bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 p-3.5 rounded-2xl flex justify-between items-center hover:border-slate-400 dark:hover:border-slate-700 transition-all">
                                       <div className="flex items-center gap-3">
-                                        <div className="w-8.5 h-8.5 rounded-xl bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center font-bold text-xs text-slate-600 dark:text-slate-355 uppercase">
+                                        <div className="w-8.5 h-8.5 rounded-full bg-slate-50 dark:bg-slate-950 border border-slate-100 dark:border-slate-800 flex items-center justify-center font-bold text-xs text-slate-600 dark:text-slate-355 uppercase">
                                           {item.patientName[0]}
                                         </div>
                                         <div>
@@ -1766,7 +1802,7 @@ export default function BookMyDocApp() {
                           <Card variant="elevated" className="p-5 border border-slate-150/70 bg-white dark:bg-slate-900 shadow-sm flex flex-col gap-4">
                             <h4 className="font-heading font-extrabold text-sm">Consultation Room Details</h4>
                             <div className="flex items-center gap-3 bg-slate-50 dark:bg-slate-950 p-3 rounded-2xl border border-slate-100 dark:border-slate-800">
-                              <div className="w-12 h-12 rounded-xl gradient-primary flex items-center justify-center text-white font-bold">
+                              <div className="w-12 h-12 rounded-full gradient-primary flex items-center justify-center text-white font-bold">
                                 {doc.name[4]}
                               </div>
                               <div>
@@ -2267,10 +2303,16 @@ export default function BookMyDocApp() {
 
       {/* --- LIFTED DESKTOP VIEW: PREMIUM DOCTOR WORKSPACE --- */}
       {view === 'doctor' && (
-        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans">
+        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans relative">
           
           {/* Sidebar */}
-          <aside className="w-64 bg-white dark:bg-slate-900 border-r border-slate-150 dark:border-slate-800 flex flex-col justify-between p-6 z-20">
+          <aside className={cn(
+            "w-64 bg-white dark:bg-slate-900 border-r border-slate-150 dark:border-slate-800 flex flex-col justify-between p-6 z-20 shrink-0",
+            "fixed inset-y-0 left-0 transform -translate-x-full lg:translate-x-0 lg:relative transition-transform duration-300 ease-in-out",
+            {
+              "translate-x-0": doctorSidebarOpen
+            }
+          )}>
             <div className="flex flex-col gap-8">
               {/* Logo */}
               <div className="flex items-center gap-3">
@@ -2298,7 +2340,7 @@ export default function BookMyDocApp() {
                   return (
                     <button
                       key={item.id}
-                      onClick={() => setDoctorTab(item.id as any)}
+                      onClick={() => { setDoctorTab(item.id as any); setDoctorSidebarOpen(false); }}
                       className={cn(
                         "flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold transition-all duration-200 focus:outline-none",
                         {
@@ -2345,7 +2387,7 @@ export default function BookMyDocApp() {
                         "flex items-center gap-1.5 px-2 py-1.5 rounded-xl text-[10px] font-bold border transition-all focus:outline-none justify-start",
                         {
                           "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700 shadow-xs text-slate-700 dark:text-slate-100": doctorStatus === s.status,
-                          "bg-transparent border-transparent text-slate-400 hover:text-slate-600": doctorStatus !== s.status
+                          "bg-transparent border-transparent text-slate-400 hover:text-slate-650": doctorStatus !== s.status
                         }
                       )}
                     >
@@ -2358,7 +2400,7 @@ export default function BookMyDocApp() {
 
               {/* Logout button */}
               <button
-                onClick={() => setView('auth')}
+                onClick={() => { setView('auth'); setDoctorSidebarOpen(false); }}
                 className="flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-950/20 transition-all focus:outline-none mt-1"
               >
                 <LogOut className="w-4.5 h-4.5" />
@@ -2367,27 +2409,42 @@ export default function BookMyDocApp() {
             </div>
           </aside>
 
+          {doctorSidebarOpen && (
+            <div 
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-15 lg:hidden"
+              onClick={() => setDoctorSidebarOpen(false)}
+            />
+          )}
+
           {/* Main workspace container */}
           <main className="flex-1 flex flex-col overflow-hidden">
             {/* Header */}
-            <header className="h-16 border-b border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-between items-center px-8 z-10">
-              <div className="flex items-center gap-4">
-                <h2 className="font-heading font-black text-base text-slate-800 dark:text-slate-100 tracking-tight">
-                  {doctorTab === 'dashboard' && 'Clinical Consultation Suite'}
-                  {doctorTab === 'patients' && 'Patient Registry & Records'}
-                  {doctorTab === 'consultations' && 'Historical Consultation Audits'}
-                  {doctorTab === 'appointments' && 'Appointment Scheduler Queue'}
-                  {doctorTab === 'availability' && 'Doctor Duty & Slots Scheduler'}
-                  {doctorTab === 'analytics' && 'Operational Metrics Analytics'}
-                  {doctorTab === 'profile' && 'Professional Profile Portfolio'}
-                </h2>
-                <Badge variant={doctorStatus === 'Available' ? 'success' : doctorStatus === 'Busy' ? 'warning' : 'neutral'} size="xs" dot>
-                  {doctorStatus}
-                </Badge>
+            <header className="h-16 border-b border-slate-150 dark:border-slate-800 bg-white dark:bg-slate-900 flex justify-between items-center px-4 md:px-8 z-10 gap-3">
+              <div className="flex items-center gap-3">
+                <button
+                  onClick={() => setDoctorSidebarOpen(true)}
+                  className="p-2 -ml-2 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-slate-800 lg:hidden focus:outline-none"
+                >
+                  <Menu className="w-5.5 h-5.5" />
+                </button>
+                <div className="flex items-center gap-3">
+                  <h2 className="font-heading font-black text-base text-slate-800 dark:text-slate-100 tracking-tight leading-none">
+                    {doctorTab === 'dashboard' && 'Clinical Consultation Suite'}
+                    {doctorTab === 'patients' && 'Patient Registry & Records'}
+                    {doctorTab === 'consultations' && 'Historical Consultation Audits'}
+                    {doctorTab === 'appointments' && 'Appointment Scheduler Queue'}
+                    {doctorTab === 'availability' && 'Doctor Duty & Slots Scheduler'}
+                    {doctorTab === 'analytics' && 'Operational Metrics Analytics'}
+                    {doctorTab === 'profile' && 'Professional Profile Portfolio'}
+                  </h2>
+                  <Badge variant={doctorStatus === 'Available' ? 'success' : doctorStatus === 'Busy' ? 'warning' : 'neutral'} size="xs" dot>
+                    {doctorStatus}
+                  </Badge>
+                </div>
               </div>
 
               <div className="flex items-center gap-4">
-                <span className="text-xs text-slate-400 font-bold">Room 03 • Dermavita Clinic • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                <span className="text-xs text-slate-400 font-bold hidden md:inline" suppressHydrationWarning>Room 03 • Dermavita Clinic • {new Date().toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric' })}</span>
                 
                 {/* Notification Bell */}
                 <div className="relative">
@@ -2407,14 +2464,14 @@ export default function BookMyDocApp() {
             </header>
 
             {/* Scrollable Tab Workspaces */}
-            <div className="flex-1 overflow-y-auto p-8 scrollbar-none bg-[#F8FAFC] dark:bg-slate-950">
+            <div className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 scrollbar-none bg-[#F8FAFC] dark:bg-slate-950">
               
               {/* TAB 1: WORKSPACE (DASHBOARD) */}
               {doctorTab === 'dashboard' && (
                 <div className="flex flex-col gap-6 max-w-6.5xl mx-auto">
                   
                   {/* Today's Stats Cards */}
-                  <div className="grid grid-cols-4 gap-4">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     {[
                       { label: 'Appointments Today', val: appointments.filter(a => a.doctorId === 'doc-1' && a.date === getDateOffset(0)).length, desc: 'Total queued bookings', color: 'text-primary' },
                       { label: 'Completed Consults', val: appointments.filter(a => a.doctorId === 'doc-1' && a.date === getDateOffset(0) && a.status === 'Completed').length, desc: 'Finished check-ups', color: 'text-emerald-500' },
@@ -2432,17 +2489,17 @@ export default function BookMyDocApp() {
                   </div>
 
                   {/* Main Grid: Left Workspace, Right Queue */}
-                  <div className="grid grid-cols-3 gap-6 items-start">
+                  <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
                     
                     {/* Column 1 & 2: Active Patient & Consult Notes */}
-                    <div className="col-span-2 flex flex-col gap-6">
+                    <div className="lg:col-span-2 flex flex-col gap-6">
                       {doctorActivePatientId ? (
                         <Card variant="elevated" className="p-6 bg-white border border-slate-100 flex flex-col gap-6 shadow-sm">
                           
                           {/* Patient ID Banner */}
                           <div className="flex justify-between items-start border-b pb-4.5 border-slate-100 dark:border-slate-800">
                             <div className="flex items-center gap-4">
-                              <div className="w-14 h-14 rounded-2xl bg-primary-light/50 border border-primary/20 flex items-center justify-center font-heading font-black text-xl text-[#0F8B8D]">
+                              <div className="w-14 h-14 rounded-full bg-primary-light/50 border border-primary/20 flex items-center justify-center font-heading font-black text-xl text-[#0F8B8D]">
                                 {activeDocPatient.name.split(' ').map(n => n[0]).join('')}
                               </div>
                               <div>
@@ -2481,7 +2538,7 @@ export default function BookMyDocApp() {
                           )}
 
                           {/* Patient Vitals Quick Read Grid */}
-                          <div className="grid grid-cols-4 gap-3">
+                          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
                             {[
                               { label: 'Blood Pressure', val: activeDocPatient.vitals.bloodPressure, desc: 'Normal range: 120/80', stat: 'Normal' },
                               { label: 'Pulse Rate', val: `${activeDocPatient.vitals.heartRate} bpm`, desc: 'Normal: 60-100', stat: 'Stable' },
@@ -2923,7 +2980,7 @@ export default function BookMyDocApp() {
               {doctorTab === 'patients' && (
                 <div className="flex flex-col gap-6 max-w-6.5xl mx-auto">
                   {/* Search and Filters */}
-                  <div className="flex justify-between items-center bg-white p-4.5 rounded-2xl border border-slate-150 shadow-xs gap-4">
+                  <div className="flex justify-between items-center bg-white dark:bg-slate-900 p-4.5 rounded-2xl border border-slate-150 dark:border-slate-800 shadow-xs gap-4">
                     <div className="relative flex-1 flex items-center">
                       <Search className="absolute left-4 w-4.5 h-4.5 text-slate-400" />
                       <input
@@ -2931,17 +2988,17 @@ export default function BookMyDocApp() {
                         placeholder="Search patient registry by name or email..."
                         value={doctorSearchQuery}
                         onChange={(e) => setDoctorSearchQuery(e.target.value)}
-                        className="w-full pl-11 pr-4 py-3 border border-slate-200/80 rounded-2xl text-[13px] focus:outline-none focus:border-primary shadow-3xs transition-all placeholder:text-slate-400 bg-white"
+                        className="w-full pl-11 pr-4 py-3 border border-slate-200/80 dark:border-slate-800 rounded-2xl text-[13px] focus:outline-none focus:border-primary shadow-3xs transition-all placeholder:text-slate-400 bg-white dark:bg-slate-900 text-slate-850 dark:text-slate-100"
                       />
                     </div>
                   </div>
 
                   {/* Patients List Grid */}
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                     {MOCK_PATIENTS.filter(p => p.name.toLowerCase().includes(doctorSearchQuery.toLowerCase())).map((pat) => (
                       <Card key={pat.id} variant="elevated" className="p-5 bg-white border border-slate-100 flex flex-col gap-4 shadow-xs">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-xl bg-slate-100 flex items-center justify-center font-heading font-black text-sm text-slate-700">
+                          <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center font-heading font-black text-sm text-slate-700 dark:text-slate-300">
                             {pat.name.split(' ').map(n => n[0]).join('')}
                           </div>
                           <div>
@@ -3021,11 +3078,11 @@ export default function BookMyDocApp() {
               {/* TAB 4: APPOINTMENTS */}
               {doctorTab === 'appointments' && (
                 <div className="max-w-5xl mx-auto flex flex-col gap-6">
-                  {/* Appointments Table Grid */}
-                  <Card className="bg-white border border-slate-150 shadow-sm overflow-hidden rounded-3xl">
+                  {/* Desktop Appointments Table */}
+                  <Card className="hidden md:block bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 shadow-sm overflow-hidden rounded-3xl">
                     <table className="w-full text-left border-collapse text-xs">
                       <thead>
-                        <tr className="bg-slate-50 text-slate-500 font-bold uppercase tracking-wider border-b border-slate-150">
+                        <tr className="bg-slate-50 dark:bg-slate-950 text-slate-500 dark:text-slate-400 font-bold uppercase tracking-wider border-b border-slate-150 dark:border-slate-800">
                           <th className="p-4 pl-6">Token</th>
                           <th className="p-4">Patient Name</th>
                           <th className="p-4">Slot Time</th>
@@ -3036,12 +3093,12 @@ export default function BookMyDocApp() {
                       </thead>
                       <tbody>
                         {appointments.filter(a => a.doctorId === 'doc-1').map((appt) => (
-                          <tr key={appt.id} className="border-b last:border-0 border-slate-100 hover:bg-slate-50/50 transition-colors">
-                            <td className="p-4 pl-6 font-bold text-slate-800">{appt.token}</td>
-                            <td className="p-4 font-black">{appt.patientName}</td>
-                            <td className="p-4 font-semibold text-slate-500">{appt.time}</td>
-                            <td className="p-4 text-slate-500 truncate max-w-xs">{appt.reason}</td>
-                            <td className="p-4 text-slate-500 font-bold">{appt.payment.method}</td>
+                          <tr key={appt.id} className="border-b last:border-0 border-slate-100 dark:border-slate-800 hover:bg-slate-50/50 dark:hover:bg-slate-850/50 transition-colors">
+                            <td className="p-4 pl-6 font-bold text-slate-800 dark:text-slate-200">{appt.token}</td>
+                            <td className="p-4 font-black text-slate-900 dark:text-slate-105">{appt.patientName}</td>
+                            <td className="p-4 font-semibold text-slate-500 dark:text-slate-400">{appt.time}</td>
+                            <td className="p-4 text-slate-500 dark:text-slate-400 truncate max-w-xs">{appt.reason}</td>
+                            <td className="p-4 text-slate-500 dark:text-slate-400 font-bold">{appt.payment.method}</td>
                             <td className="p-4 pr-6 text-right">
                               <Badge
                                 variant={
@@ -3060,51 +3117,85 @@ export default function BookMyDocApp() {
                       </tbody>
                     </table>
                   </Card>
+
+                  {/* Mobile Appointments Card List */}
+                  <div className="md:hidden flex flex-col gap-3">
+                    {appointments.filter(a => a.doctorId === 'doc-1').map((appt) => (
+                      <Card key={appt.id} variant="elevated" className="p-4 bg-white border border-slate-100 shadow-xs flex flex-col gap-3">
+                        <div className="flex justify-between items-center">
+                          <span className="font-bold text-slate-850 dark:text-slate-200">{appt.token}</span>
+                          <Badge
+                            variant={
+                              appt.status === 'Completed' ? 'success' :
+                              appt.status === 'Now Serving' ? 'primary' :
+                              appt.status === 'Waiting' ? 'warning' : 'neutral'
+                            }
+                            size="xs"
+                            dot
+                          >
+                            {appt.status}
+                          </Badge>
+                        </div>
+                        <div className="flex justify-between items-center text-xs">
+                          <span className="font-black text-slate-900 dark:text-slate-100">{appt.patientName}</span>
+                          <span className="font-semibold text-slate-500 dark:text-slate-400">{appt.time}</span>
+                        </div>
+                        <div className="text-xs text-slate-500 dark:text-slate-400 border-t border-slate-100 dark:border-slate-800 pt-2 flex flex-col gap-1">
+                          <div>
+                            <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Reason:</span> {appt.reason}
+                          </div>
+                          <div>
+                            <span className="text-[9px] text-slate-400 uppercase font-bold tracking-wider">Payment:</span> {appt.payment.method}
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
                 </div>
               )}
 
               {/* TAB 5: DUTY SETTINGS */}
               {doctorTab === 'availability' && (
-                <div className="max-w-4xl mx-auto grid grid-cols-2 gap-6 items-start">
+                <div className="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-start">
                   {/* Setup parameters */}
                   <Card variant="elevated" className="p-6 bg-white border border-slate-100 shadow-sm flex flex-col gap-5">
-                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 border-b pb-3.5 border-slate-100">Work Hours Configuration</h4>
+                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 dark:text-slate-100 border-b pb-3.5 border-slate-100 dark:border-slate-800">Work Hours Configuration</h4>
                     <div className="flex flex-col gap-4 text-xs">
                       <div>
-                        <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Duty Working Hours</label>
+                        <label className="block text-slate-500 dark:text-slate-400 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Duty Working Hours</label>
                         <input 
                           type="text" 
                           value={doctorWorkingHours}
                           onChange={(e) => setDoctorWorkingHours(e.target.value)}
-                          className="w-full p-3 border border-slate-200 rounded-2xl bg-slate-50 focus:outline-none focus:border-primary focus:bg-white text-xs font-bold transition-all"
+                          className="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-950 transition-all"
                         />
                       </div>
                       <div>
-                        <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Lunch/Break Hours</label>
+                        <label className="block text-slate-500 dark:text-slate-400 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Lunch/Break Hours</label>
                         <input 
                           type="text" 
                           value={doctorLunchTime}
                           onChange={(e) => setDoctorLunchTime(e.target.value)}
-                          className="w-full p-3 border border-slate-200 rounded-2xl bg-slate-50 focus:outline-none focus:border-primary focus:bg-white text-xs font-bold transition-all"
+                          className="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-950 transition-all"
                         />
                       </div>
                       <div className="grid grid-cols-2 gap-3">
                         <div>
-                          <label className="block text-slate-500 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Max Patients/Day</label>
+                          <label className="block text-slate-500 dark:text-slate-400 font-bold mb-1.5 uppercase tracking-wider text-[9px]">Max Patients/Day</label>
                           <input 
                             type="number" 
                             value={doctorMaxPatients}
                             onChange={(e) => setDoctorMaxPatients(parseInt(e.target.value))}
-                            className="w-full p-3 border border-slate-200 rounded-2xl bg-slate-50 focus:outline-none focus:border-primary focus:bg-white text-xs font-bold transition-all text-center"
+                            className="w-full p-3 border border-slate-200 dark:border-slate-800 rounded-2xl bg-slate-50 dark:bg-slate-900 text-xs font-bold text-slate-800 dark:text-slate-100 focus:outline-none focus:border-primary focus:bg-white dark:focus:bg-slate-955 transition-all text-center"
                           />
                         </div>
                         <div className="flex flex-col justify-end pb-1.5 pl-2">
-                          <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-600">
+                          <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-600 dark:text-slate-450">
                             <input 
                               type="checkbox" 
                               checked={doctorEmergencyAvailable}
                               onChange={(e) => setDoctorEmergencyAvailable(e.target.checked)}
-                              className="rounded border-slate-400 text-primary focus:ring-primary w-4.5 h-4.5"
+                              className="rounded border-slate-400 dark:border-slate-700 text-primary focus:ring-primary w-4.5 h-4.5"
                             />
                             <span>Emergency Duty</span>
                           </label>
@@ -3114,16 +3205,16 @@ export default function BookMyDocApp() {
                   </Card>
 
                   {/* Summary displays */}
-                  <Card className="p-6 bg-white border border-slate-150 shadow-sm flex flex-col gap-4.5 text-xs text-slate-500">
-                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 border-b pb-3.5 border-slate-100">Live Workspace Status Preview</h4>
+                  <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 shadow-sm flex flex-col gap-4.5 text-xs text-slate-500 dark:text-slate-400">
+                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 dark:text-slate-100 border-b pb-3.5 border-slate-100 dark:border-slate-800">Live Workspace Status Preview</h4>
                     <div className="flex flex-col gap-3">
                       <div className="flex justify-between items-center">
                         <span>Clinic Work Hours:</span>
-                        <strong className="text-slate-800 font-bold">{doctorWorkingHours}</strong>
+                        <strong className="text-slate-800 dark:text-slate-200 font-bold">{doctorWorkingHours}</strong>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Lunch Break Schedule:</span>
-                        <strong className="text-slate-800 font-bold">{doctorLunchTime}</strong>
+                        <strong className="text-slate-800 dark:text-slate-200 font-bold">{doctorLunchTime}</strong>
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Emergency Call Availability:</span>
@@ -3133,7 +3224,7 @@ export default function BookMyDocApp() {
                       </div>
                       <div className="flex justify-between items-center">
                         <span>Daily Intake Capacity limit:</span>
-                        <strong className="text-slate-800 font-bold">{doctorMaxPatients} patients max</strong>
+                        <strong className="text-slate-800 dark:text-slate-200 font-bold">{doctorMaxPatients} patients max</strong>
                       </div>
                     </div>
                   </Card>
@@ -3144,7 +3235,7 @@ export default function BookMyDocApp() {
               {doctorTab === 'analytics' && (
                 <div className="max-w-4.5xl mx-auto flex flex-col gap-6">
                   {/* Metrics grid */}
-                  <div className="grid grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     {[
                       { label: 'Consultations Completed', val: appointments.filter(a => a.doctorId === 'doc-1' && a.status === 'Completed').length, desc: 'All time finished consultations' },
                       { label: 'Avg consultation speed', val: '12 min', desc: 'Average active service time' },
@@ -3152,15 +3243,15 @@ export default function BookMyDocApp() {
                     ].map((stat, idx) => (
                       <Card key={idx} variant="elevated" className="p-5 flex flex-col gap-1 bg-white border border-slate-100 shadow-xs">
                         <span className="text-[10px] text-slate-400 font-bold uppercase tracking-wider">{stat.label}</span>
-                        <span className="text-2xl font-black font-heading text-slate-800 mt-1 block">{stat.val}</span>
+                        <span className="text-2xl font-black font-heading text-slate-800 dark:text-slate-100 mt-1 block">{stat.val}</span>
                         <span className="text-[9px] text-slate-400 font-bold block mt-1">{stat.desc}</span>
                       </Card>
                     ))}
                   </div>
 
                   {/* Peak consultation hours simulated */}
-                  <Card className="p-6 bg-white border border-slate-150 shadow-sm flex flex-col gap-4">
-                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800">Peak Consultation Hours Feed</h4>
+                  <Card className="p-6 bg-white dark:bg-slate-900 border border-slate-150 dark:border-slate-800 shadow-sm flex flex-col gap-4">
+                    <h4 className="font-heading font-black text-sm uppercase tracking-wider text-slate-800 dark:text-slate-100">Peak Consultation Hours Feed</h4>
                     <div className="flex flex-col gap-3.5 mt-2">
                       {[
                         { hour: '09:00 AM - 11:00 AM', pct: 85, count: 12, label: 'High Patient Traffic' },
@@ -3188,18 +3279,18 @@ export default function BookMyDocApp() {
                 <div className="max-w-4xl mx-auto flex flex-col gap-6">
                   {/* Bio details card */}
                   <Card variant="elevated" className="p-6 bg-white border border-slate-100 shadow-sm flex flex-col gap-6">
-                    <div className="flex items-center gap-5 border-b pb-5 border-slate-100">
+                    <div className="flex items-center gap-5 border-b pb-5 border-slate-100 dark:border-slate-800">
                       <div className="w-16 h-16 rounded-full bg-[#0F8B8D] text-white flex items-center justify-center font-heading font-black text-2xl shadow-sm">
                         IP
                       </div>
                       <div>
-                        <h3 className="font-heading font-black text-lg text-slate-800">Dr. Irfana Patil</h3>
+                        <h3 className="font-heading font-black text-lg text-slate-800 dark:text-slate-100">Dr. Irfana Patil</h3>
                         <span className="text-xs text-primary font-bold block mt-1">MD Dermatology, Fellowship in Cosmetology</span>
                         <span className="text-[11px] text-slate-400 block font-semibold mt-0.5">Registration Number: REG-490802-A</span>
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 text-xs text-slate-500">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs text-slate-500 dark:text-slate-400">
                       <div>
                         <span className="text-[9px] text-slate-400 font-bold uppercase tracking-wider block mb-1">Clinical Specialties</span>
                         <strong className="text-slate-800 dark:text-slate-200 block text-sm">Cosmetic Dermatology, Dermato-surgery, Acne Scars Treatment</strong>
@@ -3908,43 +3999,11 @@ export default function BookMyDocApp() {
           )}
         </AnimatePresence>
 
-        {/* --- 4. FLOATING DEMO ROLE SWITCHER --- */}
-        {showRoleSwitcher && view !== 'splash' && view !== 'onboarding' && (
-          <div className="absolute top-3 left-1/2 -translate-x-1/2 z-[45] glass-morphic shadow-premium rounded-full px-1.5 py-1.5 flex items-center gap-0.5">
-            <span className="text-[9px] font-bold text-slate-400 mx-2 uppercase tracking-widest">Demo</span>
-            <button 
-              onClick={() => { setView('app'); setPatientTab('home'); }} 
-              className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
-                "gradient-primary text-white shadow-sm": view === 'app',
-                "text-slate-500 hover:bg-slate-100": view !== 'app'
-              })}
-            >
-              Patient
-            </button>
-            <button 
-              onClick={() => setView('receptionist')} 
-              className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
-                "gradient-primary text-white shadow-sm": (view as string) === 'receptionist',
-                "text-slate-500 hover:bg-slate-100": (view as string) !== 'receptionist'
-              })}
-            >
-              Receptionist
-            </button>
-            <button 
-              onClick={() => setView('doctor')} 
-              className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
-                "gradient-primary text-white shadow-sm": (view as string) === 'doctor',
-                "text-slate-500 hover:bg-slate-100": (view as string) !== 'doctor'
-              })}
-            >
-              Doctor
-            </button>
-          </div>
-        )}
+
 
         {/* --- 5. PATIENT PORTAL ROOT SHELL --- */}
         {view === 'app' && (
-          <div className="flex-1 flex flex-col bg-background dark:bg-slate-950 overflow-y-auto">
+          <div className="flex-1 flex flex-col bg-background dark:bg-slate-950 overflow-y-auto pb-28">
             
             {/* Header */}
             <div className="gradient-header dark:from-primary/5 dark:to-transparent px-6 pt-14 pb-5 flex justify-between items-center">
@@ -4359,8 +4418,8 @@ export default function BookMyDocApp() {
                                   "bg-white border-slate-150 hover:bg-slate-50 text-slate-600 dark:bg-slate-900 dark:border-slate-800 dark:text-slate-400": !active
                                 })}
                               >
-                                <span className="block text-[9px] uppercase tracking-widest font-bold opacity-80">{labelDay}</span>
-                                <span className="block text-[17px] font-black mt-1 font-heading leading-none">{labelDate}</span>
+                                <span className="block text-[9px] uppercase tracking-widest font-bold opacity-80" suppressHydrationWarning>{labelDay}</span>
+                                <span className="block text-[17px] font-black mt-1 font-heading leading-none" suppressHydrationWarning>{labelDate}</span>
                               </div>
                             );
                           })}
@@ -5410,42 +5469,47 @@ export default function BookMyDocApp() {
 
         {/* Notification Center overlay drawer */}
         {showNotificationOverlay && (
-          <div className="absolute inset-y-0 right-0 left-12 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-l border-slate-200/80 dark:border-slate-800 z-50 flex flex-col p-6 shadow-2xl animate-slide-in-right">
-            <div className="flex justify-between items-center border-b pb-4 mb-4 border-slate-100">
-              <h4 className="font-heading font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-base"><Bell className="w-5 h-5 text-primary" /> Notifications</h4>
-              <button 
-                onClick={() => {
-                  setNotifications(prev => prev.map(n => ({...n, read: true})));
-                  setShowNotificationOverlay(false);
-                }}
-                className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 transition-colors"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
-
-            <div className="flex-1 flex flex-col gap-3.5 overflow-y-auto pr-1 scrollbar-none">
-              {notifications.map((notif) => (
-                <div 
-                  key={notif.id}
-                  className={cn("p-3 rounded-xl border text-xs flex flex-col gap-1 transition-colors", {
-                    "bg-primary-light/40 border-primary/20 font-medium": !notif.read,
-                    "bg-gray-50 border-gray-100 text-gray-500": notif.read
-                  })}
+          <>
+            <div 
+              className="fixed inset-0 bg-slate-900/40 backdrop-blur-xs z-45"
+              onClick={() => setShowNotificationOverlay(false)}
+            />
+            <div className="fixed inset-y-0 right-0 w-[85%] max-w-sm bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-l border-slate-200/80 dark:border-slate-800 z-50 flex flex-col p-6 shadow-2xl animate-slide-in-right">
+              <div className="flex justify-between items-center border-b pb-4 mb-4 border-slate-100 dark:border-slate-800">
+                <h4 className="font-heading font-extrabold text-slate-800 dark:text-slate-100 flex items-center gap-1.5 text-base"><Bell className="w-5 h-5 text-primary" /> Notifications</h4>
+                <button 
+                  onClick={() => {
+                    setNotifications(prev => prev.map(n => ({...n, read: true})));
+                    setShowNotificationOverlay(false);
+                  }}
+                  className="p-1 rounded-xl text-slate-400 hover:text-slate-600 hover:bg-slate-50 dark:hover:bg-slate-800 transition-colors"
                 >
-                  <div className="flex justify-between items-start font-bold text-gray-800">
-                    <span className="capitalize">{notif.type} Reminder</span>
-                    <span className="text-[9px] font-normal text-gray-400">{notif.time}</span>
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              <div className="flex-1 flex flex-col gap-3.5 overflow-y-auto pr-1 scrollbar-none">
+                {notifications.map((notif) => (
+                  <div 
+                    key={notif.id}
+                    className={cn("p-3 rounded-xl border text-xs flex flex-col gap-1 transition-colors", {
+                      "bg-primary-light/40 border-primary/20 dark:bg-primary-950/20 dark:border-primary-900/30 dark:text-primary-300 font-medium": !notif.read,
+                      "bg-slate-50 dark:bg-slate-900/50 border-slate-100 dark:border-slate-800 text-slate-500 dark:text-slate-400": notif.read
+                    })}
+                  >
+                    <div className="flex justify-between items-start font-bold text-slate-800 dark:text-slate-200">
+                      <span className="capitalize">{notif.type} Reminder</span>
+                      <span className="text-[9px] font-normal text-slate-400 dark:text-slate-500">{notif.time}</span>
+                    </div>
+                    <p className="leading-relaxed mt-0.5 text-slate-650 dark:text-slate-350">{notif.message}</p>
                   </div>
-                  <p className="leading-relaxed mt-0.5">{notif.message}</p>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
+          </>
+        )}
           </div>
         )}
-
-      </div>
-      )}
 
       {/* --- PWA INSTALL PROMPT BOTTOM SHEET --- */}
       <AnimatePresence>
@@ -5577,9 +5641,40 @@ export default function BookMyDocApp() {
         )}
       </AnimatePresence>
 
+      {/* --- FLOATING DEMO ROLE SWITCHER --- */}
+      {showRoleSwitcher && view !== 'splash' && view !== 'onboarding' && (
+        <div className="fixed top-3 left-1/2 -translate-x-1/2 z-[45] glass-morphic shadow-premium rounded-full px-1.5 py-1.5 flex items-center gap-0.5">
+          <span className="text-[9px] font-bold text-slate-400 mx-2 uppercase tracking-widest">Demo</span>
+          <button 
+            onClick={() => { setView('app'); setPatientTab('home'); }} 
+            className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
+              "gradient-primary text-white shadow-sm": view === 'app',
+              "text-slate-500 hover:bg-slate-100": view !== 'app'
+            })}
+          >
+            Patient
+          </button>
+          <button 
+            onClick={() => setView('receptionist')} 
+            className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
+              "gradient-primary text-white shadow-sm": (view as string) === 'receptionist',
+              "text-slate-500 hover:bg-slate-100": (view as string) !== 'receptionist'
+            })}
+          >
+            Receptionist
+          </button>
+          <button 
+            onClick={() => setView('doctor')} 
+            className={cn("text-[11px] font-bold px-3 py-1 rounded-full transition-all duration-200", {
+              "gradient-primary text-white shadow-sm": (view as string) === 'doctor',
+              "text-slate-500 hover:bg-slate-100": (view as string) !== 'doctor'
+            })}
+          >
+            Doctor
+          </button>
+        </div>
+      )}
+
     </div>
   );
 }
-
-
-
