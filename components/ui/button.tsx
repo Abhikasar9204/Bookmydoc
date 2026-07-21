@@ -24,8 +24,8 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           {
             'bg-gradient-to-b from-[#0F8B8D] to-[#0A7577] text-white shadow-inner-glow hover:from-[#0A7577] hover:to-[#085E60]': variant === 'primary',
             'bg-primary-50 dark:bg-primary-950/20 text-primary-700 dark:text-primary-400 hover:bg-primary-100 dark:hover:bg-primary-900/30 border border-primary-200/60 dark:border-primary-800/40': variant === 'secondary',
-            'border-[1.5px] border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-900 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-slate-800 hover:border-slate-300 dark:hover:border-slate-700 shadow-xs': variant === 'outline',
-            'bg-transparent text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-700 dark:hover:text-slate-200': variant === 'ghost',
+            'border-[1.5px] border-custom bg-card-custom text-secondary hover:bg-hover-custom hover:text-primary shadow-xs theme-transition': variant === 'outline',
+            'bg-transparent text-muted hover:bg-hover-custom hover:text-primary theme-transition': variant === 'ghost',
             'bg-gradient-to-b from-red-500 to-red-600 text-white shadow-inner-glow hover:from-red-600 hover:to-red-700': variant === 'danger',
           },
           // Sizes — minimum 44px touch targets

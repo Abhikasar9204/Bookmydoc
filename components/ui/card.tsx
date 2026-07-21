@@ -24,13 +24,13 @@ export const Card = React.forwardRef<HTMLDivElement, CardProps>(
           paddingMap[padding],
           {
             // Variants
-            'bg-white dark:bg-slate-900 border border-slate-100/80 dark:border-slate-800 shadow-md': variant === 'default',
-            'bg-white dark:bg-slate-900 border border-slate-100/60 dark:border-slate-800 shadow-premium': variant === 'elevated',
-            'bg-white dark:bg-slate-900 border-2 border-slate-200/70 dark:border-slate-800 shadow-xs': variant === 'outlined',
-            'gradient-card-accent border border-slate-100/60 dark:border-slate-800 shadow-md': variant === 'gradient',
-            'glass-morphic shadow-md': variant === 'glass' || glass,
+            'bg-card-custom border border-custom shadow-md dark:shadow-sm': variant === 'default',
+            'bg-card-custom border border-custom shadow-premium dark:shadow-md': variant === 'elevated',
+            'bg-card-custom border-2 border-custom shadow-xs dark:shadow-none': variant === 'outlined',
+            'gradient-card-accent border border-custom shadow-md dark:shadow-sm': variant === 'gradient',
+            'glass-morphic shadow-md dark:shadow-xs': variant === 'glass' || glass,
             // Hover
-            'hover:shadow-premium-hover hover:-translate-y-0.5 cursor-pointer': hoverable,
+            'hover:shadow-premium-hover hover:-translate-y-0.5 cursor-pointer dark:hover:shadow-none': hoverable,
           },
           className
         )}

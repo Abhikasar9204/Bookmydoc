@@ -1,6 +1,56 @@
 @import "tailwindcss";
 
+@variant dark (&:where(.dark, .dark *));
+
+:root {
+  --color-theme-bg: #F8FAFC;
+  --color-theme-card: #FFFFFF;
+  --color-theme-text-primary: #0F172A;
+  --color-theme-text-secondary: #475569;
+  --color-theme-text-muted: #64748B;
+  --color-theme-border: #E2E8F0;
+  --color-theme-hover: #F1F5F9;
+
+  /* Semantic Status Colors (Light Theme defaults) */
+  --color-theme-serving-text: #166534;
+  --color-theme-serving-bg: #DCFCE7;
+  --color-theme-waiting-text: #92400E;
+  --color-theme-waiting-bg: #FEF3C7;
+  --color-theme-completed-text: #1E40AF;
+  --color-theme-completed-bg: #DBEAFE;
+  --color-theme-cancelled-text: #991B1B;
+  --color-theme-cancelled-bg: #FEE2E2;
+  --color-theme-emergency-text: #C2410C;
+  --color-theme-emergency-bg: #FFEDD5;
+}
+
+.dark {
+  --color-theme-bg: #020617;
+  --color-theme-card: #111827;
+  --color-theme-text-primary: #F8FAFC;
+  --color-theme-text-secondary: #CBD5E1;
+  --color-theme-text-muted: #94A3B8;
+  --color-theme-border: #334155;
+  --color-theme-hover: #1E3A5F;
+
+  /* Semantic Status Colors (Dark Theme defaults) */
+  --color-theme-serving-text: #4ADE80;
+  --color-theme-serving-bg: #064E3B;
+  --color-theme-waiting-text: #FBBF24;
+  --color-theme-waiting-bg: #78350F;
+  --color-theme-completed-text: #60A5FA;
+  --color-theme-completed-bg: #1E3A8A;
+  --color-theme-cancelled-text: #F87171;
+  --color-theme-cancelled-bg: #7F1D1D;
+  --color-theme-emergency-text: #FB923C;
+  --color-theme-emergency-bg: #7C2D12;
+}
+
 @theme {
+  --color-background: var(--color-theme-bg);
+  --color-card: var(--color-theme-card);
+  --color-border-custom: var(--color-theme-border);
+  --color-hover-custom: var(--color-theme-hover);
   /* ─── Primary Palette (Teal) ─── */
   --color-primary: #0F8B8D;
   --color-primary-hover: #0A7577;
@@ -315,4 +365,105 @@
   transform: translateX(-10px);
   transition: opacity 200ms ease-in,
               transform 200ms ease-in;
+}
+
+@utility text-clamp-title {
+  font-size: clamp(1.25rem, 4.5vw, 2rem);
+}
+
+@utility text-clamp-heading {
+  font-size: clamp(1rem, 3.5vw, 1.5rem);
+}
+
+@utility text-clamp-body {
+  font-size: clamp(0.875rem, 3vw, 1rem);
+}
+
+@utility text-clamp-small {
+  font-size: clamp(0.75rem, 2.5vw, 0.875rem);
+}
+
+.theme-transition,
+.theme-transition *,
+header, aside, main, body, html, button, input, span, p, h1, h2, h3, h4, h5, h6, select, textarea {
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), color 0.3s cubic-bezier(0.4, 0, 0.2, 1), fill 0.3s cubic-bezier(0.4, 0, 0.2, 1), stroke 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@utility text-primary {
+  color: var(--color-theme-text-primary);
+}
+
+@utility text-brand {
+  color: #0F8B8D;
+}
+
+@utility text-secondary {
+  color: var(--color-theme-text-secondary);
+}
+
+@utility text-muted {
+  color: var(--color-theme-text-muted);
+}
+
+@utility border-custom {
+  border-color: var(--color-theme-border);
+}
+
+@utility bg-card-custom {
+  background-color: var(--color-theme-card);
+}
+
+@utility bg-bg-custom {
+  background-color: var(--color-theme-bg);
+}
+
+/* Dynamic Status color utilities */
+@utility text-success {
+  color: var(--color-theme-serving-text) !important;
+}
+@utility bg-success-subtle {
+  background-color: var(--color-theme-serving-bg) !important;
+}
+
+@utility text-warning {
+  color: var(--color-theme-waiting-text) !important;
+}
+@utility bg-warning-subtle {
+  background-color: var(--color-theme-waiting-bg) !important;
+}
+
+@utility text-info {
+  color: var(--color-theme-completed-text) !important;
+}
+@utility bg-info-subtle {
+  background-color: var(--color-theme-completed-bg) !important;
+}
+
+@utility text-danger {
+  color: var(--color-theme-cancelled-text) !important;
+}
+@utility bg-danger-subtle {
+  background-color: var(--color-theme-cancelled-bg) !important;
+}
+
+@utility text-emergency {
+  color: var(--color-theme-emergency-text) !important;
+}
+@utility bg-emergency-subtle {
+  background-color: var(--color-theme-emergency-bg) !important;
+}
+
+/* Global placeholders override */
+input::placeholder, textarea::placeholder {
+  color: var(--color-theme-text-muted) !important;
+  opacity: 0.8;
+}
+
+/* Global button state overrides for accessibility */
+button:disabled, html input:disabled, select:disabled, textarea:disabled {
+  background-color: var(--color-theme-border) !important;
+  color: var(--color-theme-text-muted) !important;
+  opacity: 0.65 !important;
+  cursor: not-allowed !important;
+  border-color: transparent !important;
 }
