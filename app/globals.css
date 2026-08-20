@@ -72,12 +72,16 @@
   --color-accent: #7CE7E7;
 
   /* ─── Semantic Colors ─── */
+  --color-brand: #0F8B8D;
   --color-success: #22C55E;
   --color-success-light: #F0FDF4;
   --color-warning: #F59E0B;
   --color-warning-light: #FFFBEB;
   --color-error: #EF4444;
   --color-error-light: #FEF2F2;
+  --color-danger: #EF4444;
+  --color-info: #3B82F6;
+  --color-emergency: #F97316;
 
   /* ─── Neutrals ─── */
   --color-background: #F8FAFC;

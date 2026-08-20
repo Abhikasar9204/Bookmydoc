@@ -14,14 +14,14 @@ const sizeMap = {
 };
 
 const dotColorMap: Record<string, string> = {
-  primary: 'bg-primary-500',
-  secondary: 'bg-secondary',
-  success: 'bg-success',
-  warning: 'bg-warning',
-  error: 'bg-danger',
+  primary: 'bg-primary-500 dark:bg-primary-400',
+  secondary: 'bg-teal-500 dark:bg-teal-400',
+  success: 'bg-emerald-500 dark:bg-emerald-400',
+  warning: 'bg-amber-500 dark:bg-amber-400',
+  error: 'bg-red-500 dark:bg-red-400',
   neutral: 'bg-slate-400 dark:bg-slate-500',
-  info: 'bg-info',
-  emergency: 'bg-emergency',
+  info: 'bg-blue-500 dark:bg-blue-400',
+  emergency: 'bg-orange-500 dark:bg-orange-400',
 };
 
 export const Badge = ({ className, variant = 'neutral', size = 'md', dot = false, ...props }: BadgeProps) => {
@@ -31,21 +31,21 @@ export const Badge = ({ className, variant = 'neutral', size = 'md', dot = false
         'inline-flex items-center gap-1.5 rounded-full font-semibold tracking-wide transition-colors theme-transition',
         sizeMap[size],
         {
-          'bg-primary-50 text-primary-700 border border-primary-200/40': variant === 'primary',
-          'bg-teal-50 text-teal-700 border border-teal-200/40': variant === 'secondary',
-          'bg-success-subtle text-success border border-success/15': variant === 'success',
-          'bg-warning-subtle text-warning border border-warning/15': variant === 'warning',
-          'bg-danger-subtle text-danger border border-danger/15': variant === 'error',
-          'bg-info-subtle text-info border border-info/15': variant === 'info',
-          'bg-emergency-subtle text-emergency border border-emergency/15': variant === 'emergency',
-          'bg-slate-100 dark:bg-slate-800 text-secondary border border-custom': variant === 'neutral',
+          'bg-primary-50 dark:bg-primary-950/40 text-primary-700 dark:text-primary-300 border border-primary-200/60 dark:border-primary-800/50': variant === 'primary',
+          'bg-teal-50 dark:bg-teal-950/40 text-teal-700 dark:text-teal-300 border border-teal-200/60 dark:border-teal-800/50': variant === 'secondary',
+          'bg-success-subtle text-success border border-emerald-500/20 dark:border-emerald-500/40': variant === 'success',
+          'bg-warning-subtle text-warning border border-amber-500/20 dark:border-amber-500/40': variant === 'warning',
+          'bg-danger-subtle text-danger border border-red-500/20 dark:border-red-500/40': variant === 'error',
+          'bg-info-subtle text-info border border-blue-500/20 dark:border-blue-500/40': variant === 'info',
+          'bg-emergency-subtle text-emergency border border-orange-500/20 dark:border-orange-500/40': variant === 'emergency',
+          'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700': variant === 'neutral',
         },
         className
       )}
       {...props}
     >
       {dot && (
-        <span className={cn('w-1.5 h-1.5 rounded-full', dotColorMap[variant])} />
+        <span className={cn('w-1.5 h-1.5 rounded-full shrink-0', dotColorMap[variant] || dotColorMap.neutral)} />
       )}
       {props.children}
     </span>

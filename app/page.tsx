@@ -205,6 +205,9 @@ export default function BookMyDocApp() {
   const [pwaStorageUsed, setPwaStorageUsed] = useState<string>('estimating...');
   const [showPwaSuccessAnimation, setShowPwaSuccessAnimation] = useState(false);
 
+  // Appointments View Sub-Tab
+  const [appointmentsSubTab, setAppointmentsSubTab] = useState<'my_bookings' | 'book_new'>('my_bookings');
+
   // Theme Initialisation & Persistence
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme');
@@ -260,7 +263,6 @@ export default function BookMyDocApp() {
         setShowPwaPrompt(true);
       }
     };
-    window.addEventListener('beforebeforeinstallprompt', handleBeforeInstall); // standard event fallback
     window.addEventListener('beforeinstallprompt', handleBeforeInstall);
 
     // 3. Online/Offline Listeners
@@ -808,14 +810,79 @@ export default function BookMyDocApp() {
     return matchesSearch && matchesSpecialty && matchesFee && matchesExp;
   });
 
-  // Today's Appointment logic (includes Scheduled, Checked-in Waiting, or Now Serving states)
+  // --- Date & Time Parsing & Expiration Helper ---
+  const parseAppointmentDateTime = (dateStr: string, timeStr: string): Date => {
+    try {
+      const [year, month, day] = dateStr.split('-').map(Number);
+      let hours = 9;
+      let minutes = 0;
+      if (timeStr) {
+        const match = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+        if (match) {
+          hours = parseInt(match[1], 10);
+          minutes = parseInt(match[2], 10);
+          const ampm = match[3].toUpperCase();
+          if (ampm === 'PM' && hours < 12) hours += 12;
+          if (ampm === 'AM' && hours === 12) hours = 0;
+        }
+      }
+      return new Date(year, month - 1, day, hours, minutes, 0, 0);
+    } catch (e) {
+      return new Date(dateStr);
+    }
+  };
+
+  const isAppointmentExpired = (appt: Appointment): boolean => {
+    const now = new Date();
+    const apptDate = parseAppointmentDateTime(appt.date, appt.time);
+    const bufferMs = 60 * 60 * 1000;
+    return (apptDate.getTime() + bufferMs) < now.getTime();
+  };
+
+  // --- Single Source of Truth Appointment Categorization ---
+  // Active Current Visit: Today's active/ongoing appointment
   const todayAppt = appointments.find(
     (appt) => appt.patientId === currentUser.id && 
               appt.date === getDateOffset(0) && 
               (appt.status === 'Upcoming' || appt.status === 'Waiting' || appt.status === 'Now Serving')
   );
 
+  // Upcoming Future Appointments (valid future/upcoming appointments excluding current visit, cancelled, and expired)
+  const upcomingAppointmentsList = appointments.filter(
+    (appt) => appt.patientId === currentUser.id &&
+              appt.status !== 'Cancelled' && appt.status !== 'Completed' &&
+              appt.id !== todayAppt?.id &&
+              !isAppointmentExpired(appt)
+  );
+
+  // Total active & upcoming appointments count
+  const totalActiveUpcomingCount = (todayAppt ? 1 : 0) + upcomingAppointmentsList.length;
+
   const todayQueue = todayAppt ? getDoctorQueueDetails(todayAppt.doctorId, currentUser.id) : null;
+
+  // Realtime Cancellation Handler
+  const handleCancelAppointment = (apptId: string) => {
+    setAppointments(prev => 
+      prev.map(appt => appt.id === apptId ? { ...appt, status: 'Cancelled' as const } : appt)
+    );
+
+    console.log(`%c[Supabase Realtime Broadcast]`, 'color: #ED8936; font-weight: bold;', {
+      event: 'UPDATE',
+      schema: 'public',
+      table: 'appointments',
+      payload: { id: apptId, status: 'Cancelled' }
+    });
+
+    const newNotif: Notification = {
+      id: `notif-cancel-${Date.now()}`,
+      title: 'Appointment Cancelled',
+      message: 'Your appointment has been cancelled successfully.',
+      time: 'Just now',
+      type: 'appointment',
+      read: false
+    };
+    setNotifications(prev => [newNotif, ...prev]);
+  };
 
   // --- Receptionist Actions ---
   const handleReceptionistCheckin = (apptId: string) => {
@@ -1253,13 +1320,13 @@ export default function BookMyDocApp() {
   const abhishekActiveQueue = getDoctorQueueDetails('doc-1', currentUser.id);
 
   return (
-    <div className={cn("h-screen overflow-hidden lg:h-auto lg:overflow-visible flex flex-col bg-slate-50 dark:bg-slate-950 font-sans theme-transition", {
+    <div className={cn("min-h-screen flex flex-col bg-slate-50 dark:bg-slate-950 font-sans theme-transition", {
       "dark text-slate-100": darkMode
     })}>
       
-      {/* Mobile Global Header (Visible only on < lg screens and for logged-in views) */}
+      {/* Global Header (Visible across mobile & desktop screens) */}
       {view !== 'splash' && view !== 'onboarding' && view !== 'auth' && (
-        <div className="lg:hidden w-full bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 flex flex-col pt-[calc(env(safe-area-inset-top)+12px)] px-4 pb-3 sticky top-0 z-40 shadow-xs theme-transition">
+        <div className="w-full bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 flex flex-col pt-[calc(env(safe-area-inset-top)+12px)] px-4 pb-3 sticky top-0 z-40 shadow-xs theme-transition">
           
           {/* Row 1: Menu | Clinic Name | Notification | Dark Mode Toggle | Profile Avatar */}
           <div className="flex items-center justify-between gap-3">
@@ -1380,7 +1447,7 @@ export default function BookMyDocApp() {
 
       {/* --- LIFTED DESKTOP VIEW: RECEPTIONIST OPERATING CONSOLE DASHBOARD --- */}
       {view === 'receptionist' && (
-        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans relative">
+        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-y-auto font-sans relative">
           
           {/* Sidebar */}
           <aside className={cn(
@@ -1468,7 +1535,7 @@ export default function BookMyDocApp() {
           )}
 
           {/* Main Area */}
-          <main className="flex-1 flex flex-col min-h-screen overflow-hidden">
+          <main className="flex-1 flex flex-col min-h-screen overflow-y-auto">
             {/* Header */}
             <header className="hidden lg:flex h-18 bg-white dark:bg-slate-900 border-b border-slate-150/80 dark:border-slate-800 px-4 md:px-8 justify-between items-center z-10 gap-3">
               <div className="flex items-center gap-3">
@@ -2515,7 +2582,7 @@ export default function BookMyDocApp() {
 
       {/* --- LIFTED DESKTOP VIEW: PREMIUM DOCTOR WORKSPACE --- */}
       {view === 'doctor' && (
-        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-hidden font-sans relative">
+        <div className="flex-1 flex bg-[#F8FAFC] dark:bg-slate-950 text-slate-800 dark:text-slate-100 min-h-screen overflow-y-auto font-sans relative">
           
           {/* Sidebar */}
           <aside className={cn(
@@ -3877,9 +3944,9 @@ export default function BookMyDocApp() {
         </div>
       )}
 
-      {/* Container simulating a premium mobile device shell, centered on desktop */}
+      {/* Main Responsive Application Shell */}
       {view !== 'receptionist' && view !== 'doctor' && (
-        <div className="w-full max-w-md flex-1 h-full lg:h-screen mx-auto bg-background dark:bg-slate-950 shadow-lg flex flex-col relative overflow-hidden pb-20">
+        <div className="w-full max-w-4xl flex-1 min-h-screen mx-auto bg-background dark:bg-slate-950 shadow-xl flex flex-col relative pb-28 border-x border-slate-200/40 dark:border-slate-800/40">
         
         {/* --- 1. SPLASH SCREEN --- */}
         <AnimatePresence>
@@ -4309,56 +4376,70 @@ export default function BookMyDocApp() {
                 {/* Quick Actions Grid */}
                 <div>
                   <h3 className="text-[13px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4">Quick Actions</h3>
-                  <div className="grid grid-cols-4 gap-4 text-center">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
                     <div 
                       onClick={() => setPatientTab('queue')}
-                      className="flex flex-col items-center gap-2 cursor-pointer group"
+                      className="flex flex-col items-center gap-2 cursor-pointer group p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 shadow-xs transition-all"
                     >
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100/60 border border-indigo-100/50 flex items-center justify-center text-indigo-500 shadow-sm group-hover:scale-110 group-active:scale-95 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-50 to-indigo-100/60 dark:from-indigo-950/40 dark:to-indigo-900/20 border border-indigo-100/50 flex items-center justify-center text-indigo-500 shadow-xs group-hover:scale-105 transition-transform">
                         <Activity className="w-5.5 h-5.5" />
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Live Queue</span>
+                      <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Live Queue</span>
                     </div>
 
                     <div 
                       onClick={() => { setSelectedDoctor(doctors[0]); triggerBooking(doctors[0]); }}
-                      className="flex flex-col items-center gap-2 cursor-pointer group"
+                      className="flex flex-col items-center gap-2 cursor-pointer group p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 shadow-xs transition-all"
                     >
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/60 border border-emerald-100/50 flex items-center justify-center text-emerald-500 shadow-sm group-hover:scale-110 group-active:scale-95 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-emerald-50 to-emerald-100/60 dark:from-emerald-950/40 dark:to-emerald-900/20 border border-emerald-100/50 flex items-center justify-center text-emerald-500 shadow-xs group-hover:scale-105 transition-transform">
                         <Calendar className="w-5.5 h-5.5" />
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Book Visit</span>
+                      <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Book Visit</span>
                     </div>
 
                     <div 
                       onClick={() => setPatientTab('appointments')}
-                      className="flex flex-col items-center gap-2 cursor-pointer group"
+                      className="flex flex-col items-center gap-2 cursor-pointer group p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 shadow-xs transition-all relative"
                     >
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/60 border border-amber-100/50 flex items-center justify-center text-amber-500 shadow-sm group-hover:scale-110 group-active:scale-95 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-50 to-amber-100/60 dark:from-amber-950/40 dark:to-amber-900/20 border border-amber-100/50 flex items-center justify-center text-amber-500 shadow-xs group-hover:scale-105 transition-transform relative">
                         <Stethoscope className="w-5.5 h-5.5" />
+                        {totalActiveUpcomingCount > 0 && (
+                          <span className="absolute -top-1 -right-1 bg-amber-500 text-white text-[9px] font-extrabold w-4.5 h-4.5 rounded-full flex items-center justify-center border border-white dark:border-slate-900 animate-pulse">
+                            {totalActiveUpcomingCount}
+                          </span>
+                        )}
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Find Doc</span>
+                      <div className="flex flex-col items-center">
+                        <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Appointments</span>
+                        <span className="text-[9.5px] text-slate-400 font-bold">{totalActiveUpcomingCount} Active</span>
+                      </div>
                     </div>
 
                     <div 
                       onClick={() => { setPatientTab('records'); setHealthSubTab('history'); }}
-                      className="flex flex-col items-center gap-2 cursor-pointer group"
+                      className="flex flex-col items-center gap-2 cursor-pointer group p-3.5 rounded-2xl bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 hover:border-primary/40 shadow-xs transition-all"
                     >
-                      <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/60 border border-rose-100/50 flex items-center justify-center text-rose-500 shadow-sm group-hover:scale-110 group-active:scale-95 transition-transform">
+                      <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-rose-50 to-rose-100/60 dark:from-rose-950/40 dark:to-rose-900/20 border border-rose-100/50 flex items-center justify-center text-rose-500 shadow-xs group-hover:scale-105 transition-transform">
                         <FileText className="w-5.5 h-5.5" />
                       </div>
-                      <span className="text-[11px] font-semibold text-slate-600 dark:text-slate-400">Records</span>
+                      <span className="text-[11px] font-semibold text-slate-700 dark:text-slate-300">Records</span>
                     </div>
                   </div>
                 </div>
 
-                {/* Today's Active Appointment Card */}
-                {todayAppt ? (
-                  <div>
-                    <div className="flex justify-between items-center mb-4">
-                      <h3 className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Current Visit</h3>
-                    </div>
-                    <Card variant="elevated" className="p-6 border-none flex flex-col gap-6 relative overflow-hidden shadow-xl shadow-primary/5">
+                {/* Today's Active / Current Visit Appointment Card */}
+                <div>
+                  <div className="flex justify-between items-center mb-3">
+                    <h3 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Current Visit</h3>
+                    {todayAppt && (
+                      <Badge variant={todayAppt.status === 'Now Serving' ? 'success' : 'warning'} size="xs" dot>
+                        {todayAppt.status}
+                      </Badge>
+                    )}
+                  </div>
+
+                  {todayAppt ? (
+                    <Card variant="elevated" className="p-6 border border-slate-100 dark:border-slate-800 flex flex-col gap-6 relative overflow-hidden shadow-xl shadow-primary/5">
                         <div className="flex justify-between items-start">
                           <div>
                             <span className="text-[11px] font-bold text-primary block uppercase tracking-widest">{todayAppt.clinicName}</span>
@@ -4396,7 +4477,7 @@ export default function BookMyDocApp() {
                           className="h-10 rounded-xl px-1 text-[11px]"
                           onClick={() => setPatientTab('queue')}
                         >
-                          <Activity className="w-3.5 h-3.5 mr-1 text-primary animate-pulse" /> Queue
+                          <Activity className="w-3.5 h-3.5 mr-1 text-primary animate-pulse" /> Track Queue
                         </Button>
                         <Button 
                           variant="outline" 
@@ -4409,10 +4490,10 @@ export default function BookMyDocApp() {
                         <Button 
                           variant="outline" 
                           size="sm" 
-                          className="h-10 rounded-xl px-1 text-[11px] border-dashed hover:border-error hover:bg-rose-50"
+                          className="h-10 rounded-xl px-1 text-[11px] border-dashed hover:border-error hover:bg-rose-50 dark:hover:bg-rose-950/20 text-rose-600 dark:text-rose-400"
                           onClick={() => {
                             if(confirm("Are you sure you want to cancel this appointment?")) {
-                              setAppointments(prev => prev.map(a => a.id === todayAppt.id ? { ...a, status: 'Cancelled' } : a));
+                              handleCancelAppointment(todayAppt.id);
                             }
                           }}
                         >
@@ -4420,26 +4501,28 @@ export default function BookMyDocApp() {
                         </Button>
                       </div>
                     </Card>
-                  </div>
-                ) : (
-                  <Card className="p-6 border-dashed border-2 border-gray-200 dark:border-slate-800 flex flex-col items-center gap-4 text-center">
-                    <Calendar className="w-10 h-10 text-gray-300" />
-                    <div>
-                      <h4 className="font-bold text-gray-700 dark:text-slate-200">No appointments today</h4>
-                      <p className="text-xs text-gray-400 mt-0.5">Need skin consultation? Book one with our specialist dermatologists.</p>
-                    </div>
-                    <Button 
-                      size="sm" 
-                      className="rounded-xl px-4"
-                      onClick={() => {
-                        setSelectedDoctor(doctors[0]);
-                        triggerBooking(doctors[0]);
-                      }}
-                    >
-                      Book Appointment
-                    </Button>
-                  </Card>
-                )}
+                  ) : (
+                    <Card className="p-6 border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center gap-3 text-center bg-white dark:bg-slate-900/50">
+                      <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-slate-400">
+                        <Calendar className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm">No active appointment</h4>
+                        <p className="text-xs text-slate-400 mt-1 max-w-xs">You have no ongoing or active visits scheduled for today.</p>
+                      </div>
+                      <Button 
+                        size="sm" 
+                        className="rounded-xl px-5 mt-1 text-xs font-bold"
+                        onClick={() => {
+                          setSelectedDoctor(doctors[0]);
+                          triggerBooking(doctors[0]);
+                        }}
+                      >
+                        Book Appointment
+                      </Button>
+                    </Card>
+                  )}
+                </div>
 
                 {/* Health Summary widgets */}
                 <div>
@@ -4493,12 +4576,146 @@ export default function BookMyDocApp() {
               </div>
             )}
 
-            {/* --- TAB VIEW 2: APPOINTMENTS (Dermatologist list / Search / Detail / Booking) --- */}
+            {/* --- TAB VIEW 2: APPOINTMENTS (My Bookings & Search / Detail / Booking) --- */}
             {patientTab === 'appointments' && (
               <div className="px-6 flex flex-col gap-5 flex-1 pb-10">
                 
-                {/* Search, Filter list view */}
+                {/* Top SubTab Navigation: My Bookings vs Find & Book */}
                 {!selectedDoctor && (
+                  <div className="flex p-1 bg-slate-100 dark:bg-slate-900 rounded-2xl border border-slate-200/80 dark:border-slate-800 mt-1 mb-1">
+                    <button
+                      onClick={() => setAppointmentsSubTab('my_bookings')}
+                      className={cn("flex-1 py-2.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2", {
+                        "bg-white dark:bg-slate-800 text-primary shadow-xs": appointmentsSubTab === 'my_bookings',
+                        "text-slate-500 hover:text-slate-700 dark:text-slate-400": appointmentsSubTab !== 'my_bookings'
+                      })}
+                    >
+                      <Calendar className="w-4 h-4" />
+                      My Bookings
+                      {totalActiveUpcomingCount > 0 && (
+                        <span className="bg-primary text-white text-[9.5px] font-black px-1.5 py-0.2 rounded-full">
+                          {totalActiveUpcomingCount}
+                        </span>
+                      )}
+                    </button>
+                    <button
+                      onClick={() => setAppointmentsSubTab('book_new')}
+                      className={cn("flex-1 py-2.5 text-xs font-bold rounded-xl transition-all flex items-center justify-center gap-2", {
+                        "bg-white dark:bg-slate-800 text-primary shadow-xs": appointmentsSubTab === 'book_new',
+                        "text-slate-500 hover:text-slate-700 dark:text-slate-400": appointmentsSubTab !== 'book_new'
+                      })}
+                    >
+                      <Search className="w-4 h-4" />
+                      Find & Book
+                    </button>
+                  </div>
+                )}
+
+                {/* SUB-VIEW 1: MY BOOKINGS (Active & Upcoming Appointments List) */}
+                {appointmentsSubTab === 'my_bookings' && !selectedDoctor && (
+                  <div className="flex flex-col gap-6">
+                    {/* Current Visit Header */}
+                    {todayAppt && (
+                      <div className="flex flex-col gap-3">
+                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Active Visit Today</h4>
+                        <Card variant="elevated" className="p-5 border border-primary-100 dark:border-primary-900/40 flex flex-col gap-4 bg-gradient-to-br from-white to-primary-50/20 dark:from-slate-900 dark:to-primary-950/20 shadow-md">
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <span className="text-[10px] font-bold text-primary uppercase tracking-widest">{todayAppt.clinicName}</span>
+                              <h4 className="font-heading font-extrabold text-[16px] text-slate-800 dark:text-slate-100 mt-0.5">{todayAppt.doctorName}</h4>
+                              <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 font-medium"><Clock className="w-3.5 h-3.5 text-slate-400" /> {todayAppt.time} • Today</span>
+                            </div>
+                            <div className="text-right">
+                              <Badge variant={todayAppt.status === 'Now Serving' ? 'success' : 'warning'} size="xs" dot className="mb-1">
+                                {todayAppt.status}
+                              </Badge>
+                              <span className="text-2xl font-black text-primary block leading-none font-heading">{todayAppt.token}</span>
+                            </div>
+                          </div>
+
+                          <div className="flex gap-2 pt-2 border-t border-slate-100 dark:border-slate-800">
+                            <Button variant="secondary" size="sm" className="flex-1 h-9 text-xs" onClick={() => setPatientTab('queue')}>
+                              <Activity className="w-3.5 h-3.5 mr-1 text-primary animate-pulse" /> Track Queue
+                            </Button>
+                            <Button 
+                              variant="outline" 
+                              size="sm" 
+                              className="h-9 text-xs border-dashed text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                              onClick={() => {
+                                if (confirm("Are you sure you want to cancel this appointment?")) {
+                                  handleCancelAppointment(todayAppt.id);
+                                }
+                              }}
+                            >
+                              Cancel
+                            </Button>
+                          </div>
+                        </Card>
+                      </div>
+                    )}
+
+                    {/* Upcoming Appointments List */}
+                    <div>
+                      <div className="flex justify-between items-center mb-3">
+                        <h4 className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-[0.2em]">Upcoming Bookings ({upcomingAppointmentsList.length})</h4>
+                      </div>
+
+                      {upcomingAppointmentsList.length > 0 ? (
+                        <div className="flex flex-col gap-3.5">
+                          {upcomingAppointmentsList.map((appt) => (
+                            <Card key={appt.id} className="p-4.5 flex flex-col gap-3.5 border border-slate-100 dark:border-slate-800 hover:shadow-premium transition-all">
+                              <div className="flex justify-between items-start">
+                                <div>
+                                  <span className="text-[10px] font-bold text-primary uppercase tracking-widest">{appt.clinicName}</span>
+                                  <h4 className="font-heading font-extrabold text-[15px] text-slate-800 dark:text-slate-100 mt-0.5">{appt.doctorName}</h4>
+                                  <span className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1 mt-1 font-semibold">
+                                    <Calendar className="w-3.5 h-3.5 text-slate-400" /> {appt.date} • {appt.time}
+                                  </span>
+                                </div>
+                                <div className="text-right flex flex-col items-end gap-1">
+                                  <Badge variant="info" size="xs" dot>{appt.status}</Badge>
+                                  <span className="text-xs font-bold text-slate-500">Token: {appt.token}</span>
+                                </div>
+                              </div>
+
+                              <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 dark:border-slate-800 text-xs">
+                                <span className="text-slate-400 text-[11px] truncate max-w-[200px]">Reason: {appt.reason}</span>
+                                <Button 
+                                  variant="outline" 
+                                  size="sm" 
+                                  className="h-8 text-[11px] border-dashed text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/20"
+                                  onClick={() => {
+                                    if (confirm(`Cancel appointment with ${appt.doctorName}?`)) {
+                                      handleCancelAppointment(appt.id);
+                                    }
+                                  }}
+                                >
+                                  Cancel Booking
+                                </Button>
+                              </div>
+                            </Card>
+                          ))}
+                        </div>
+                      ) : (
+                        !todayAppt && (
+                          <Card className="p-8 border-dashed border-2 border-slate-200 dark:border-slate-800 flex flex-col items-center gap-3 text-center bg-white dark:bg-slate-900/50">
+                            <Calendar className="w-10 h-10 text-slate-300 dark:text-slate-700" />
+                            <div>
+                              <h4 className="font-bold text-slate-700 dark:text-slate-200 text-sm">No upcoming appointments</h4>
+                              <p className="text-xs text-slate-400 mt-1 max-w-xs">You have no active future visits scheduled.</p>
+                            </div>
+                            <Button size="sm" className="rounded-xl px-4 text-xs font-bold mt-1" onClick={() => setAppointmentsSubTab('book_new')}>
+                              Book Consultation
+                            </Button>
+                          </Card>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+
+                {/* SUB-VIEW 2: SEARCH & BOOK NEW */}
+                {(appointmentsSubTab === 'book_new' || selectedDoctor) && (
                   <>
                     <h3 className="text-xl font-heading font-extrabold text-slate-800 dark:text-slate-100 tracking-tight">Find Dermatologist</h3>
                     
@@ -4603,12 +4820,10 @@ export default function BookMyDocApp() {
                         <div className="text-center py-10 text-slate-400 font-medium">No doctors found matching filters.</div>
                       )}
                     </div>
-                  </>
-                )}
 
-                {/* Booking wizard (when selectedDoctor is not null) */}
-                {selectedDoctor && (
-                  <div className="flex flex-col gap-4">
+                    {/* Booking wizard (when selectedDoctor is not null) */}
+                    {selectedDoctor && (
+                      <div className="flex flex-col gap-4">
                     {/* Back Button */}
                     <button 
                       onClick={() => setSelectedDoctor(null)}
@@ -4874,7 +5089,9 @@ export default function BookMyDocApp() {
                       </motion.div>
                     )}
 
-                  </div>
+                      </div>
+                    )}
+                  </>
                 )}
 
               </div>
